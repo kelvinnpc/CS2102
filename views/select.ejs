@@ -18,17 +18,31 @@
 		<table class="table">
 			<thead>
 				<tr>
+				<!--
 					<th scope="col">Matric</th>
 					<th scope="col">Name</th>
 					<th scope="col">Faculty</th>
+				-->
+					<th scope="col">Name</th>
+					<th scope="col">Username</th>
+					<th scope="col">Password</th>
+					<th scope="col">NRIC</th>
+					<th scope="col">Mobile Number</th>
 				</tr>
 			</thead>
 			<tbody>
 				<% for(var i=0; i<data.length; i++) { %>
 				<tr>
+				<!--
 					<td><%= data[i].matric%></td>
 					<td><%= data[i].name%></td>
 					<td><%= data[i].faculty%></td>
+				-->
+					<td><%= data[i].name%></td>
+					<td><%= data[i].username%></td>
+					<td><%= data[i].password%></td>
+					<td><%= data[i].nric%></td>
+					<td><%= data[i].phoneNumber%></td>
 				</tr>
 				<% } %>
 			</tbody>
