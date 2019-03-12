@@ -38,9 +38,9 @@ router.post('/', function(req, res, next) {
 						+ name + "','" 
 						+ username + "','" 
 						+ password + "','"
-						+ nric + "'," 
+						+ nric + "','" 
 						+ phoneNumber
-						+ ")";
+						+ "'')";
 	
 	pool.query(insert_query, (err, data) => {
 		res.redirect('/select')
