@@ -10,20 +10,32 @@ function check(event) {
 	var phoneNumber  = document.getElementById('phoneNumber').value;
 
 	// Simple Check
-	if(matric.length != 9) {
-		alert("Invalid matric number");
-		event.preventDefault();
-		event.stopPropagation();
-		return false;
-	}
 	if(name.length == 0) {
 		alert("Invalid name");
 		event.preventDefault();
 		event.stopPropagation();
 		return false;
 	}
-	if(faculty.length != 3) {
+	if(username.length == 0) {
+		alert("Invalid username");
+		event.preventDefault();
+		event.stopPropagation();
+		return false;
+	}
+	if(password.length == 0) {
 		alert("Invalid faculty code");
+		event.preventDefault();
+		event.stopPropagation();
+		return false;
+	}
+	if(nric.length != 9) {
+		alert("Invalid nric number");
+		event.preventDefault();
+		event.stopPropagation();
+		return false;
+	}
+	if(phoneNumber.length != 8) {
+		alert("Invalid phone number");
 		event.preventDefault();
 		event.stopPropagation();
 		return false;
