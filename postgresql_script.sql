@@ -7,31 +7,31 @@ CREATE TABLE Users (
 );
 
 INSERT INTO Users (name, username, password, nric, phoneNumber)
-VALUES ('S0000001A', 'Leslie Cole', 'LeslieCole', 'password1', 12345678);
+VALUES ('Leslie Cole', 'LeslieCole', 'password1', 'S0000001A', 12345678);
 
 INSERT INTO Users (name, username, password, nric, phoneNumber)
-VALUES ('S0000002B', 'Myra Morgan', 'MyraMorgan', 'password1',12345677);
+VALUES ('Myra Morgan', 'MyraMorgan', 'password1','S0000002B', 12345677);
 
 INSERT INTO Users (name, username, password, nric, phoneNumber)
-VALUES ('S0000003C', 'Raymond Benson', 'RaymondBenson', 'password1', 12345676);
+VALUES ('Raymond Benson', 'RaymondBenson', 'password1', 'S0000003C', 12345676);
 
 INSERT INTO Users (name, username, password, nric, phoneNumber)
-VALUES ('S0000004D', 'Wendy Kelley', 'WendyKelley', 'password1', 12345675);
+VALUES ('Wendy Kelley', 'WendyKelley', 'password1', 'S0000004D', 12345675);
 
 INSERT INTO Users (name, username, password, nric, phoneNumber)
-VALUES ('S0000005E', 'Patrick Bowers', 'PatrickBowers', 'password1', 12345674);
+VALUES ('Patrick Bowers', 'PatrickBowers', 'password1', 'S0000005E', 12345674);
 
 INSERT INTO Users (name, username, password, nric, phoneNumber)
-VALUES ('S0000006F', 'Ralph Hogan', 'RalphHogan', 'password1', 12345673);
+VALUES ('Ralph Hogan', 'RalphHogan', 'password1', 'S0000006F', 12345673);
 
 INSERT INTO Users (name, username, password, nric, phoneNumber)
-VALUES ('S0000007G', 'Cecil Rodriquez', 'CecilRodriquez', 'password1', 12345672);
+VALUES ('Cecil Rodriquez', 'CecilRodriquez', 'password1', 'S0000007G', 12345672);
 
 INSERT INTO Users (name, username, password, nric, phoneNumber)
-VALUES ('S0000008H', 'Delia Ferguson', 'DeliaFerguson', 'password1', 12345671);
+VALUES ('Delia Ferguson', 'DeliaFerguson', 'password1', 'S0000008H', 12345671);
 
 INSERT INTO Users (name, username, password, nric, phoneNumber)
-VALUES ('S0000009I', 'Frances Wright', 'FrancesWright', 'password1', 12345670);
+VALUES ('Frances Wright', 'FrancesWright', 'password1', 'S0000009I', 12345670);
 
 INSERT INTO Users (name, username, password, nric, phoneNumber)
-VALUES ('S0000010J', 'Alyssa Sims', 'AlyssaSims', 'password1', 12345681);
+VALUES ('Alyssa Sims', 'AlyssaSims', 'password1', 'S0000010J', 12345681);
