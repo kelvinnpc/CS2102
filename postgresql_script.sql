@@ -7,6 +7,11 @@ CREATE TABLE Users (
 	phonenumber varchar(8) NOT NULL
 );
 
+CREATE TABLE Admins (
+	adminid varchar(255) PRIMARY KEY,
+	password varchar(255) NOT NULL
+);
+
 INSERT INTO Users (name, username, password, nric, phonenumber)
 VALUES ('Leslie Cole', 'LeslieCole', 'password1', 'S0000001A', '12345678');
 
