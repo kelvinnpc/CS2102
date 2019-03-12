@@ -7,7 +7,7 @@ function check(event) {
 	var username  = document.getElementById('username' ).value;
 	var password  = document.getElementById('password' ).value;
 	var nric  = document.getElementById('nric' ).value;
-	var phoneNumber  = document.getElementById('phoneNumber').value;
+	var phonenumber  = document.getElementById('phonenumber').value;
 
 	// Simple Check
 	if(name.length == 0) {
@@ -34,7 +34,7 @@ function check(event) {
 		event.stopPropagation();
 		return false;
 	}
-	if(phoneNumber.length != 8) {
+	if(phonenumber.length != 8) {
 		alert("Invalid phone number");
 		event.preventDefault();
 		event.stopPropagation();

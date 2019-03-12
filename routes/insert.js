@@ -31,7 +31,7 @@ router.post('/', function(req, res, next) {
 	var username = req.body.username;
 	var password = req.body.password;
 	var nric = req.body.nric;
-	var phoneNumber = req.body.phoneNumber;
+	var phonenumber = req.body.phonenumber;
 	
 	// Construct Specific SQL Query
 	var insert_query = sql_query + "('" 
@@ -39,8 +39,8 @@ router.post('/', function(req, res, next) {
 						+ username + "','" 
 						+ password + "','"
 						+ nric + "','" 
-						+ phoneNumber
-						+ "'')";
+						+ phonenumber
+						+ "')";
 	
 	pool.query(insert_query, (err, data) => {
 		res.redirect('/select')
