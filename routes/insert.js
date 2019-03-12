@@ -11,7 +11,7 @@ const pool = new Pool({
 })
 
 /* SQL Query */
-var sql_query = 'INSERT INTO student_info VALUES';
+var sql_query = 'INSERT INTO Users VALUES';
 
 // GET
 router.get('/', function(req, res, next) {
@@ -21,12 +21,23 @@ router.get('/', function(req, res, next) {
 // POST
 router.post('/', function(req, res, next) {
 	// Retrieve Information
-	var matric  = req.body.matric;
-	var name    = req.body.name;
-	var faculty = req.body.faculty;
+	//var matric  = req.body.matric;
+	//var name    = req.body.name;
+	//var faculty = req.body.faculty;
+	var name = req.body.name;
+	var username = req.body.username;
+	var password = req.body.password;
+	var nric = req.body.nric;
+	var phoneNumber = req.body.phoneNumber;
 	
 	// Construct Specific SQL Query
-	var insert_query = sql_query + "('" + matric + "','" + name + "','" + faculty + "')";
+	var insert_query = sql_query + "('" 
+						+ name + "','" 
+						+ username + "','" 
+						+ password + "','"
+						+ nric + "','" 
+						+ phoneNumber + "','"  
+						+ "')";
 	
 	pool.query(insert_query, (err, data) => {
 		res.redirect('/select')

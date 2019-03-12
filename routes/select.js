@@ -17,7 +17,7 @@ const pool = new Pool({
 
 
 /* SQL Query */
-var sql_query = 'SELECT * FROM student_info';
+var sql_query = 'SELECT * FROM Users';
 
 router.get('/', function(req, res, next) {
 	pool.query(sql_query, (err, data) => {
