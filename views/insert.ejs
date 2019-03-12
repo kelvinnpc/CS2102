@@ -19,6 +19,7 @@
   <body>
     <h1>CS2102: <%= title%></h1>
 		<form id="html_form" action="insert" role="form" method="post">
+<!--
 			<div class="form-group">
 				<label for="matric">Matric Number</label>
 				<input type="text" class="form-control" id="matric" name="matric" aria-describedby="matricHelp" placeholder="Enter your matric number">
@@ -32,6 +33,31 @@
 				<label for="faculty">Faculty</label>
 				<input type="text" class="form-control" id="faculty" name="faculty" placeholder="Enter your faculty">
 			</div>
+-->
+<!-- Carpooling User Sign up details -->
+			<div class="form-group">
+				<label for="name">Name</label>
+				<input type="text" class="form-control" id="name" name="name" placeholder="Enter your name">
+				<small id="nameHelp" class="form-text text-muted">This is your name shown to others.</small>
+			</div>
+			<div class="form-group">
+				<label for="username">Username</label>
+				<input type="text" class="form-control" id="username" name="username" placeholder="Enter your username">
+			</div>
+			<div class="form-group">
+				<label for="password">Password</label>
+				<input type="text" class="form-control" id="password" name="password" placeholder="Enter your password">
+			</div>
+			<div class="form-group">
+				<label for="nric">Identification Number</label>
+				<input type="text" class="form-control" id="nric" name="nric" placeholder="Enter your NRIC e.g. S1234567A">
+			</div>
+			<div class="form-group">
+				<label for="phoneNumber">Mobile Number</label>
+				<input type="text" class="form-control" id="phoneNumber" name="phoneNumber" placeholder="Enter your mobile number">
+			</div>
+
+
 			<button type="submit" class="btn btn-primary">Submit</button>
 		</form>
 		

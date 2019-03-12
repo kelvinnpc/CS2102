@@ -1,9 +1,14 @@
 function check(event) {
 	// Get Values
-	var matric  = document.getElementById('matric' ).value;
-	var name    = document.getElementById('name'   ).value;
-	var faculty = document.getElementById('faculty').value;
-	
+	// var matric  = document.getElementById('matric' ).value;
+	// var name    = document.getElementById('name'   ).value;
+	// var faculty = document.getElementById('faculty').value;
+	var name  = document.getElementById('name' ).value;
+	var username  = document.getElementById('username' ).value;
+	var password  = document.getElementById('password' ).value;
+	var nric  = document.getElementById('nric' ).value;
+	var phoneNumber  = document.getElementById('phoneNumber').value;
+
 	// Simple Check
 	if(matric.length != 9) {
 		alert("Invalid matric number");
