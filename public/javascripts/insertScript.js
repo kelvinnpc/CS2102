@@ -8,6 +8,7 @@ function check(event) {
 	var password  = document.getElementById('password' ).value;
 	var nric  = document.getElementById('nric' ).value;
 	var phonenumber  = document.getElementById('phonenumber').value;
+	var address = document.getElementById('address').value;
 
 	// Simple Check
 	if(name.length == 0) {
@@ -36,6 +37,12 @@ function check(event) {
 	}
 	if(phonenumber.length != 8) {
 		alert("Invalid phone number");
+		event.preventDefault();
+		event.stopPropagation();
+		return false;
+	}
+	if (address.length == 0) {
+		alert("Invalid address");
 		event.preventDefault();
 		event.stopPropagation();
 		return false;
