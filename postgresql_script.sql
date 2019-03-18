@@ -1,4 +1,14 @@
+DROP TABLE Rates;
+DROP TABLE Wallet;
+DROP TABLE Uses;
+DROP TABLE Cars;
+DROP TABLE Bids;
+DROP TABLE History;
+DROP TABLE Rides;
+DROP TABLE Drivers;
+DROP TABLE Passengers;
 DROP TABLE Users;
+
 CREATE TABLE Users (
 	name    varchar(255) NOT NULL,
 	username varchar(255) NOT NULL,
@@ -7,6 +17,67 @@ CREATE TABLE Users (
 	phonenumber varchar(8) NOT NULL,
 	address varchar(255) NOT NULL
 );
+
+CREATE TABLE Passengers (
+	pid varchar(9) references Users (nric),
+	primary key(pid)
+);
+
+CREATE TABLE Drivers (
+	did varchar(9) references Users (nric),
+	primary key (did)
+);
+
+CREATE TABLE Rides (
+	rid varchar(255) PRIMARY KEY,
+	did varchar(9) references Users (nric),
+	source varchar(255) NOT NULL,
+	destination varchar(255) NOT NULL,
+	dates date NOT NULL,
+	timing time NOT NULL,
+	status varchar(255) NOT NULL
+);
+
+CREATE TABLE Rates (
+	raterID varchar(9) references Users (nric),
+	ratedID varchar(9) references Users (nric),
+	rideID varchar(255) references Rides (rid),
+	ratings int
+);
+
+CREATE TABLE Wallet (
+	wid varchar(9) references Passengers (pid),
+	balance int NOT NULL,
+	primary key (wid)
+);
+
+CREATE TABLE Uses (
+	timing time NOT NULL,
+	pid varchar(9) references Passengers (pid),
+	transaction varchar(255),
+	primary key (timing, pid)
+);
+
+CREATE TABLE Cars (
+	did varchar(9),
+	platenumber varchar(10),
+	model varchar(255),
+	numSeats int,
+	primary key(did, platenumber)
+);
+
+CREATE TABLE Bids (
+	pid varchar(9) references Passengers (pid),
+	rid varchar (255) references Rides (rid),
+	points int NOT NULL,
+	primary key (pid, rid)
+);
+
+CREATE TABLE History (
+	userID varchar(9) references Users (nric),
+	rid varchar(255) references Rides (rid)
+);
+
 
 INSERT INTO Users (name, username, password, nric, phonenumber, address)
 VALUES ('Leslie Cole', 'LeslieCole', 'password1', 'S0000001A', '12345678', 'Kent Ridge');
