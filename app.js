@@ -31,6 +31,10 @@ var formsRouter = require('./routes/forms');
 var insertRouter = require('./routes/insert');
 /* ---------------------------- */
 
+/* --- CheeYeo: Additions to our webapp --- */
+var loginRouter = require('./routes/login');
+/* ---------------------------- */
+
 var app = express();
 
 // view engine setup
@@ -69,6 +73,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/insert', insertRouter);
 /* ---------------------------- */
+
+/* --- CheeYeo: Additions to our webapp --- */
+app.use('/login', loginRouter)
+/* ---------------------------- */
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
