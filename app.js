@@ -4,6 +4,11 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+const exphbs = require('express-handlebars')
+const session = require('express-session')
+const passport = require('passport')
+
+
 /* --- V7: Using dotenv     --- */
 require('dotenv').load();
 
@@ -77,6 +82,18 @@ app.use('/insert', insertRouter);
 /* --- CheeYeo: Additions to our webapp --- */
 app.use('/login', loginRouter)
 /* ---------------------------- */
+
+// Authentication Setup
+//require('dotenv').load();
+require('./auth').init(app);
+app.use(session({
+  //secret: process.env.SECRET, 
+  secret: 'blah',
+  resave: true,
+  saveUninitialized: true
+}))
+app.use(passport.initialize())
+app.use(passport.session())
 
 
 // catch 404 and forward to error handler
