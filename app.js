@@ -27,7 +27,7 @@ var loopsRouter = require('./routes/loops');
 /* --- V4: Database Connect --- */
 var selectRouter = require('./routes/select');
 /* ---------------------------- */
-
+var driverRouter = require('./routes/driver');
 /* --- V5: Adding Forms     --- */
 var formsRouter = require('./routes/forms');
 /* ---------------------------- */
@@ -67,7 +67,7 @@ app.use('/loops', loopsRouter);
 /* --- V4: Database Connect --- */
 app.use('/select', selectRouter);
 /* ---------------------------- */
-
+app.use('/driver', driverRouter);
 /* --- V5: Adding Forms     --- */
 app.use('/forms', formsRouter);
 /* ---------------------------- */

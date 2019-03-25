@@ -78,7 +78,7 @@ CREATE TABLE History (
 	rid varchar(255) references Rides (rid)
 );
 
-
+--Insert into Users
 INSERT INTO Users (name, username, password, nric, phonenumber, address)
 VALUES ('Leslie Cole', 'LeslieCole', 'password1', 'S0000001A', '12345678', 'Kent Ridge');
 
@@ -108,3 +108,13 @@ VALUES ('Frances Wright', 'FrancesWright', 'password1', 'S0000009I', '12345670',
 
 INSERT INTO Users (name, username, password, nric, phonenumber, address)
 VALUES ('Alyssa Sims', 'AlyssaSims', 'password1', 'S0000010J', '12345681', 'Kent Ridge');
+--Insert into Drivers
+INSERT INTO Drivers (did) VALUES 
+('S0000001A'),
+('S0000004D');
+
+--Insert into Rides
+INSERT INTO Rides (rid, did, source, destination, dates, timing, status) VALUES
+('0001', 'S0000001A', 'Kent Ridge', 'Buona', '2019-01-29', '13:03:00', 'Pending'),
+('0002', 'S0000001A', 'Buona', 'Kent Ridge', '2019-01-31', '17:03:00', 'Pending'),
+('0003', 'S0000004D', 'Kent Ridge', 'Buona', '2019-01-31', '13:05:00', 'Pending');
