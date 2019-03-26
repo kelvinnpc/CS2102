@@ -4,8 +4,8 @@ const passport = require('passport');
 const bcrypt = require('bcrypt');
 const LocalStrategy = require('passport-local').Strategy;
 
-const authMiddleware = require('./middleware');
-const antiMiddleware = require('./antimiddle');
+// const authMiddleware = require('./middleware');
+// const antiMiddleware = require('./antimiddle');
 
 // Postgre SQL Connection
 const { Pool } = require('pg');
@@ -75,9 +75,9 @@ function initPassport () {
       })
     }
   ));
-
-  passport.authMiddleware = authMiddleware;
-  passport.antiMiddleware = antiMiddleware;
+console.log("initPassport");
+  // passport.authMiddleware = authMiddleware;
+  // passport.antiMiddleware = antiMiddleware;
 	passport.findUser = findUser;
 }
 

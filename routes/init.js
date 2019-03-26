@@ -15,7 +15,7 @@ const salt  = bcrypt.genSaltSync(round);
 function initRouter(app) {
 	/* GET */
 	//app.get('/'      , index );
-	app.get('/search', search);
+	//app.get('/search', search);
 	
 	/* PROTECTED GET */
 	//app.get('/dashboard', passport.authMiddleware(), dashboard);
@@ -34,12 +34,12 @@ function initRouter(app) {
 	//app.post('/reg_user'   , passport.antiMiddleware(), reg_user   );
 
 	/* LOGIN */
-	app.post('/login', passport.authenticate('local', {
-		successRedirect: '/select',
-        failureRedirect: '/',
-        failureFlash: true
-	}));
+	// app.post('/login', passport.authenticate('local', {
+	// 	successRedirect: '/select',
+    //     failureRedirect: '/',
+	// }));
 	
 	/* LOGOUT */
 	//app.get('/logout', passport.authMiddleware(), logout);
 }
+module.exports = initRouter;

@@ -7,6 +7,7 @@ var logger = require('morgan');
 const exphbs = require('express-handlebars')
 const session = require('express-session')
 const passport = require('passport')
+const bcrypt = require('bcrypt')
 
 
 /* --- V7: Using dotenv     --- */
@@ -52,6 +53,18 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Authentication Setup
+//require('dotenv').load();
+require('./auth').init(app);
+app.use(session({
+  //secret: process.env.SECRET, 
+  secret: 'blah',
+  resave: true,
+  saveUninitialized: true
+}))
+app.use(passport.initialize())
+app.use(passport.session())
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
@@ -83,17 +96,6 @@ app.use('/insert', insertRouter);
 app.use('/login', loginRouter)
 /* ---------------------------- */
 
-// Authentication Setup
-//require('dotenv').load();
-require('./auth').init(app);
-app.use(session({
-  //secret: process.env.SECRET, 
-  secret: 'blah',
-  resave: true,
-  saveUninitialized: true
-}))
-app.use(passport.initialize())
-app.use(passport.session())
 
 
 // catch 404 and forward to error handler
