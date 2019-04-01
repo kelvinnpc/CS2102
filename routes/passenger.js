@@ -21,7 +21,7 @@ var sql_query = 'SELECT rid, source, destination, dates, timing, status FROM Rid
 
 router.get('/', function(req, res, next) {
 	pool.query(sql_query, (err, data) => {
-		res.render('passenger', { title: 'Database Connect', data: data.rows });
+		res.render('passenger', { title: 'Available rides', data: data.rows });
 	});
 });
 
