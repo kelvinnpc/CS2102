@@ -1,3 +1,5 @@
+  
+
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -40,6 +42,9 @@ var insertRouter = require('./routes/insert');
 /* --- CheeYeo: Additions to our webapp --- */
 var loginRouter = require('./routes/login');
 /* ---------------------------- */
+
+var driverRouter = require('./routes/driver');
+var driverhistoryRouter = require('./routes/driverhistory');
 
 var app = express();
 
@@ -84,6 +89,9 @@ app.use('/passenger', passengerRouter);
 /* --- V5: Adding Forms     --- */
 app.use('/forms', formsRouter);
 /* ---------------------------- */
+
+app.use('/driver', driverRouter);
+app.use('/driverhistory', driverhistoryRouter);
 
 /* --- V6: Modify Database  --- */
 var bodyParser = require('body-parser');

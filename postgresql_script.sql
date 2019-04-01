@@ -33,8 +33,8 @@ CREATE TABLE Rides (
 	did varchar(9) references Users (nric),
 	source varchar(255) NOT NULL,
 	destination varchar(255) NOT NULL,
-	dates date NOT NULL,
-	timing time NOT NULL,
+	dates varchar(255) NOT NULL,
+	timing varchar(255) NOT NULL,
 	status varchar(255) NOT NULL
 );
 
