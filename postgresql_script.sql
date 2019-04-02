@@ -70,7 +70,7 @@ CREATE TABLE Bids (
 	pid varchar(9) references Passengers (pid),
 	rid varchar (255) references Rides (rid),
 	points int NOT NULL,
-	primary key (pid, rid)
+	primary key (pid, rid, points)
 );
 
 CREATE TABLE History (

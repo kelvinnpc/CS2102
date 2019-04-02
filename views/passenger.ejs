@@ -14,7 +14,8 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
   </head>
   <body>
-    <h1>CS2102: <%= title%></h1>
+  	<p>Welcome <%= name %></p>
+    <h1><%= title%></h1>
 		<table class="table">
 			<thead>
 				<tr>
@@ -29,6 +30,7 @@
 					<th scope="col">Date</th>
 					<th scope="col">Time</th>
 					<th scope="col">Status</th>
+					<th scope="col">Bid</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -38,16 +40,24 @@
 					<td><%= data[i].matric%></td>
 					<td><%= data[i].name%></td>
 					<td><%= data[i].faculty%></td>
-				-->
+			--><form method="post" action="passenger">
 					<td><%= data[i].rid%></td>
 					<td><%= data[i].source%></td>
 					<td><%= data[i].destination%></td>
 					<td><%= data[i].dates.toDateString()%></td>
 					<td><%= data[i].timing%></td>
 					<td><%= data[i].status%></td>
+					<td>
+						<input type="text" class="form-control" id="bid" name="bid" placeholder="Enter your bid point">
+						<button type="submit" class="btn btn-primary" name="rid" value="<%= data[i].rid%>">Bid</button>
+					</td>
+				</form>
 				</tr>
 				<% } %>
 			</tbody>
 		</table>
+		<script>
+			
+		</script>
   </body>
 </html>
