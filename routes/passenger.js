@@ -16,7 +16,7 @@ const pool = new Pool({
 
 
 /* SQL Query */
-var sql_query = 'SELECT rid, source, destination, dates, timing, status FROM Rides';
+var sql_query = 'SELECT rid, source, destination, dates, timing, status, max(points) as maxpt FROM Rides natural join Bids group by rid';
 var post_query = 'INSERT INTO Bids VALUES($1, $2, $3)';
 
 // router.get('/', function(req, res, next) {
@@ -29,6 +29,7 @@ router.post('/', bid);
 
 function passenger(req,res,next){
   pool.query(sql_query, (err, data) => {
+  	console.log(err);
   	basic(req,res,'passenger', {title: 'Available rides', data: data.rows});
   });
 }
