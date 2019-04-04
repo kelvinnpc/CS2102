@@ -30,6 +30,7 @@
 					<th scope="col">Date</th>
 					<th scope="col">Time</th>
 					<th scope="col">Status</th>
+					<th scope="col">Highest Bid</th>
 					<th scope="col">Bid</th>
 				</tr>
 			</thead>
@@ -47,6 +48,7 @@
 					<td><%= data[i].dates.toDateString()%></td>
 					<td><%= data[i].timing%></td>
 					<td><%= data[i].status%></td>
+					<td><%= data[i].maxpt%></td>
 					<td>
 						<input type="text" class="form-control" id="bid" name="bid" placeholder="Enter your bid point">
 						<button type="submit" class="btn btn-primary" name="rid" value="<%= data[i].rid%>">Bid</button>
