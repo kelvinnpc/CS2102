@@ -16,8 +16,13 @@ const pool = new Pool({
 
 
 /* SQL Query */
-var sql_query = 'SELECT rid, source, destination, dates, timing, status, max(points) as maxpt FROM Rides natural join Bids group by rid';
+var sql_query = 'With tempTable as ' +
+				'(SELECT Rides.rid, Rides.did, source, destination, dates, timing, status, coalesce(max(points),0) as maxpt ' +
+				'FROM Rides left join Bids on Rides.rid = Bids.rid group by Rides.rid) ' +
+				'Select rid, name, source, destination, dates, timing, status, maxpt ' +
+				'FROM tempTable join Users on Users.nric = tempTable.did';
 var post_query = 'INSERT INTO Bids VALUES($1, $2, $3)';
+var wallet_query = 'SELECT balance from Wallet where Wallet.wid = $1';
 
 // router.get('/', function(req, res, next) {
 // 	pool.query(sql_query, (err, data) => {
@@ -29,8 +34,10 @@ router.post('/', bid);
 
 function passenger(req,res,next){
   pool.query(sql_query, (err, data) => {
-  	console.log(err);
-  	basic(req,res,'passenger', {title: 'Available rides', data: data.rows});
+  	pool.query(wallet_query, [req.user.nric], (err1, data1) => {
+  		console.log(err);
+  		basic(req,res,'passenger', {title: 'Available rides', data: data.rows, data1:data1.rows});
+  	});
   });
 }
 

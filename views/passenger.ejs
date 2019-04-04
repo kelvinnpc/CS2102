@@ -14,6 +14,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
   </head>
   <body>
+  	<div><%= data1.balance%></div>
   	<p>Welcome <%= name %></p>
     <h1><%= title%></h1>
 		<table class="table">
@@ -25,6 +26,7 @@
 					<th scope="col">Faculty</th>
 				-->
 					<th scope="col">Ride ID</th>
+					<th scope="col">Driver name</th>
 					<th scope="col">Source</th>
 					<th scope="col">Destination</th>
 					<th scope="col">Date</th>
@@ -43,9 +45,10 @@
 					<td><%= data[i].faculty%></td>
 			--><form method="post" action="passenger">
 					<td><%= data[i].rid%></td>
+					<td><%= data[i].name%></td>
 					<td><%= data[i].source%></td>
 					<td><%= data[i].destination%></td>
-					<td><%= data[i].dates.toDateString()%></td>
+					<td><%= data[i].dates%></td>
 					<td><%= data[i].timing%></td>
 					<td><%= data[i].status%></td>
 					<td><%= data[i].maxpt%></td>

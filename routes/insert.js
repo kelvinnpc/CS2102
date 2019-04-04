@@ -13,6 +13,7 @@ const salt  = bcrypt.genSaltSync(round);
 /* SQL Query */
 var sql_query = 'INSERT INTO Users VALUES ($1, $2, $3, $4, $5, $6)';
 var insert_query = 'INSERT INTO Passengers VALUES ($1)';
+var wallet_query = 'INSERT INTO Wallet VALUES ($1, 200)';
 
 // GET
 router.get('/', function(req, res, next) {
@@ -41,7 +42,9 @@ router.post('/', function(req, res, next) {
 	
 	pool.query(sql_query, [name, username, password, nric, phonenumber, address], (err, data) => {
 		pool.query(insert_query, [nric], (err, data) => {
-			res.redirect('/')
+			pool.query(wallet_query, [nric], (err, data) => {
+				res.redirect('/')
+			});
 		});
 	});
 
