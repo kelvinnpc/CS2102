@@ -118,3 +118,29 @@ INSERT INTO Rides (rid, did, source, destination, dates, timing, status) VALUES
 ('0001', 'S0000001A', 'Kent Ridge', 'Buona', '2019-01-29', '13:03:00', 'Pending'),
 ('0002', 'S0000001A', 'Buona', 'Kent Ridge', '2019-01-31', '17:03:00', 'Pending'),
 ('0003', 'S0000004D', 'Kent Ridge', 'Buona', '2019-01-31', '13:05:00', 'Pending');
+
+CREATE OR REPLACE FUNCTION balance_check()
+RETURNS TRIGGER AS $$
+BEGIN
+	IF (SELECT balance from Wallet where NEW.pid = Wallet.wid) < NEW.points
+	THEN RETURN NULL;
+	-- If passenger try to rebid....
+	-- ELSIF (EXISTS(SELECT points as oldPt from Bids where (Bids.pid = NEW.pid) and (Bids.rid = NEW.rid)))
+	-- THEN 
+	-- 	UPDATE Wallet
+	-- 	SET balance = balance + oldPt
+	-- 	WHERE Wallet.wid = NEW.pid;
+	-- 	DELETE from Bids
+	-- 	WHERE Bids.pid = NEW.pid and Bids.rid = NEW.rid;
+	END IF;
+	UPDATE Wallet
+	SET balance = (balance - NEW.points)
+	WHERE Wallet.wid = NEW.pid;
+	RETURN NEW;
+END; $$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER check_bid_points_when_bidding
+	BEFORE INSERT on Bids
+	FOR EACH ROW
+	EXECUTE PROCEDURE balance_check();

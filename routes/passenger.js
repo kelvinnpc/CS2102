@@ -65,5 +65,4 @@ function basic(req, res, page, other) {
 	res.render(page, info);
 }
 
-
 module.exports = router;
