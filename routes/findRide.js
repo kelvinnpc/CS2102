@@ -36,7 +36,7 @@ function findRide(req, res, next) {
 		pool.query(wallet_query, [req.user.nric], (err1, data1) => {
 			pool.query(totalBids_query, [req.user.nric], (err2, data2) => {
 				pool.query(isDriver_query, [req.user.nric], (err3, driverCheck) => {
-					if (req.query.driver === 'undefined' && driverCheck.rows[0] != 0) {
+					if (req.query.driver !== 'true' && driverCheck.rows[0].count != 0) {
 						res.redirect('/advertiseRide');
 					}
 					else if (req.query.driver === 'true')
