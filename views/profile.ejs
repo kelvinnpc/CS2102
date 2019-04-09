@@ -15,11 +15,13 @@
   </head>
   <body>
 		<div class="header">
-			<% if (driver) { %>
-				<%- include driverHeader.ejs %>
-			<% } else { %>
-				<%- include passengerHeader.ejs %>
-			<% } %>
+        <% if (drivermode) { %>
+          <%- include driverHeader.ejs %>
+        <% } else if (!drivermode && driver) { %>
+          <%- include dualHeader.ejs %>
+        <% } else { %>
+          <%- include passengerHeader.ejs %>
+        <% } %>
 		</div>
 
 		<div class="main">

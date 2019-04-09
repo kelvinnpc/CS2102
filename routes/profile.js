@@ -39,14 +39,19 @@ function profile(req, res, next) {
                         pool.query(driversAll_query, [req.user.nric], (err5, data5) => {
                             pool.query(isDriver_query, [req.user.nric], (err0, data0) => {
                                 console.log(err);
-                                if (data0.rows[0].count == 0)
+                                if (req.query.drivermode==='true')
                                     basic(req, res, 'profile', {
-                                        title: 'Profile Page', driver: false, data: data.rows, count: data1.rows[0].q, passenger30: data2.rows[0].q,
+                                        title: 'Profile Page', driver: false, drivermode: true, data: data.rows, count: data1.rows[0].q, passenger30: data2.rows[0].q,
+                                        passengerall: data3.rows[0].q, driver30: data4.rows[0].q, driverall: data5.rows[0].q
+                                    });
+                                else if (data0.rows[0].count == 0)
+                                    basic(req, res, 'profile', {
+                                        title: 'Profile Page', driver: false, drivermode: false, data: data.rows, count: data1.rows[0].q, passenger30: data2.rows[0].q,
                                         passengerall: data3.rows[0].q, driver30: data4.rows[0].q, driverall: data5.rows[0].q
                                     });
                                 else
                                     basic(req, res, 'profile', {
-                                        title: 'Profile Page', driver: true, data: data.rows, count: data1.rows[0].q, passenger30: data2.rows[0].q,
+                                        title: 'Profile Page', driver: true, drivermode: false, data: data.rows, count: data1.rows[0].q, passenger30: data2.rows[0].q,
                                         passengerall: data3.rows[0].q, driver30: data4.rows[0].q, driverall: data5.rows[0].q
                                     });
 

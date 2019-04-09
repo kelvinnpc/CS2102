@@ -44,11 +44,8 @@
 			<tbody>
 				<% for(var i=0; i<data.length; i++) { %>
 				<tr>
-					<% if (driver) { %>
-						<form method="post" action="findRide?driver=true">
-					<% } else { %>
-						<form method="post" action="findRide">
-					<% } %>
+
+					<form method="post" action="findRide">
 					<td><%= data[i].rid%></td>
 					<td><%= data[i].name%></td>
 					<td><%= data[i].ratings%></td>

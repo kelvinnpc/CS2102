@@ -17,17 +17,23 @@
   </head>
   <body>
 			<div class="header">
-					<% if (driver) { %>
+					<% if (drivermode) { %>
 						<%- include driverHeader.ejs %>
-					<% } else { %>
+					<% } else if (!drivermode && driver) { %>
+						<%- include dualHeader.ejs %>
+				  <% } else { %>
 						<%- include passengerHeader.ejs %>
-					<% } %>
+				  <% } %>
 				</div>
 		
 		<div class="main">
 		<h1><%= title %></h1>
 		<h2>Have a question or issue? We are here to help</h2>
-		<form id="html_form" action="clientHelpDesk" role="form" method="post">
+		<% if (drivermode) { %>
+			<form id="html_form" method="post" role="form" action="clientHelpDesk?drivermode=true">
+		<% } else { %>
+			<form id="html_form" method="post" role="form" action="clientHelpDesk">
+		<% } %>
 			<div class="form-group">
 				<label for="message">Leave us a message</label>
 				<textarea type="text" class="form-control" id="message" name="message" required=true placeholder="Enter your message here"></textarea>

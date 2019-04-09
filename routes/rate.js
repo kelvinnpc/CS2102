@@ -28,10 +28,12 @@ function rate(req, res, next) {
 	pool.query(sql_query, [req.user.nric], (err, data) => {
 		pool.query(isDriver_query, [req.user.nric], (err3, driverCheck) => {
 			console.log(err);
-			if (driverCheck.rows[0].count == 0)
-				basic(req, res, 'rate', { title: 'Rate', driver: false, data: data.rows });
+			if (req.query.drivermode==='true')
+				basic(req, res, 'rate', { title: 'Rate', driver: false, drivermode: true, data: data.rows });
+			else if (driverCheck.rows[0].count == 0)
+				basic(req, res, 'rate', { title: 'Rate', driver: false, drivermode: false, data: data.rows });
 			else
-				basic(req, res, 'rate', { title: 'Rate', driver: true, data: data.rows });
+				basic(req, res, 'rate', { title: 'Rate', driver: true, drivermode: false, data: data.rows });
 		});
 	});
 }
@@ -39,10 +41,18 @@ function rate(req, res, next) {
 function add(req, res, next) {
 	pool.query(post_query, [req.body.rating, req.body.rid.split('; ')[0], req.user.nric, req.body.rid.split('; ')[1]], (err, data) => {
 		console.log(err);
-		if (err)
-			res.redirect('/rate?add=fail')
-		else
-			res.redirect('/rate?add=success')
+		if (err) {
+			if (req.query.drivermode==='true')
+				res.redirect('/rate?add=fail&drivermode=true')
+			else
+				res.redirect('/rate?add=fail')
+		}
+		else {
+			if (req.query.drivermode==='true')
+				res.redirect('/rate?add=success&drivermode=true')
+			else
+				res.redirect('/rate?add=success')
+		}
 
 	});
 }

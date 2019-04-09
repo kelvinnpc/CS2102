@@ -36,13 +36,10 @@ function findRide(req, res, next) {
 		pool.query(wallet_query, [req.user.nric], (err1, data1) => {
 			pool.query(totalBids_query, [req.user.nric], (err2, data2) => {
 				pool.query(isDriver_query, [req.user.nric], (err3, driverCheck) => {
-					if (req.query.driver !== 'true' && driverCheck.rows[0].count != 0) {
-						res.redirect('/advertiseRide');
-					}
-					else if (req.query.driver === 'true')
-						basic(req, res, 'findRide', { title: 'Available rides', driver: true, data: data.rows, data1: data1.rows, data2: data2.rows });
-					else
+					if (driverCheck.rows[0].count == 0)
 						basic(req, res, 'findRide', { title: 'Available rides', driver: false, data: data.rows, data1: data1.rows, data2: data2.rows });
+					else
+						basic(req, res, 'findRide', { title: 'Available rides', driver: true, data: data.rows, data1: data1.rows, data2: data2.rows });
 
 				});
 
@@ -55,19 +52,10 @@ function bid(req, res, next) {
 	console.log(req.body.bid);
 	pool.query(post_query, [req.user.nric, req.body.rid, req.body.bid], (err, data) => {
 		console.log(err);
-		if (err) {
-			if (req.query.driver === 'true')
-				res.redirect('/findRide?bid=fail&driver=true')
-			else
-				res.redirect('/findRide?bid=fail')
-		}
-		else {
-
-			if (req.query.driver === 'true')
-				res.redirect('/findRide?bid=success&driver=true')
-			else
-				res.redirect('/findRide?bid=success')
-		}
+		if (err) 
+			res.redirect('/findRide?bid=fail')
+		else
+			res.redirect('/findRide?bid=success')
 
 	});
 }

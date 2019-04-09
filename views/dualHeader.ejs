@@ -23,17 +23,30 @@
   color: black;
 }
 
+.switchButton {
+
+position: absolute;
+top: 10px;
+right: 10px;
+background-color: #555555;
+color: white;
+border: none;
+border-radius: 5px;
+
+
+}
 </style>
 </head>
 <body>
 <h1>Welcome <%= name %></h1>
+<button class="switchButton" onclick="location.href='/advertiseRide'">You are in passenger mode. Click here to switch to driver mode</button>
+
 <div class="topnav" style="padding: 0px">
   <a class="active" href="/profile">My profile</a>
-  <a href="/advertiseRide">Switch to driver mode</a>
-  <a href="/findRide">Find Rides</a>
-  <a href="/manageBids">Manage Bids</a>
   <a href="/wallet">Wallet</a>
   <a href="/rate">Rate Others</a>
+  <a href="/findRide">Find Rides</a>
+  <a href="/manageBids">Manage Bids</a>
   <a href="/passengerHistory">Ride History</a>
   <a href="/clientHelpDesk">Help</a>
   <a href="/logout">logout</a>

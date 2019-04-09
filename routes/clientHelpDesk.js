@@ -17,20 +17,31 @@ var isDriver_query = 'SELECT count(did) as count from Drivers where $1 = did';
 // GET
 router.get('/', function(req, res, next) {
 	pool.query(isDriver_query, [req.user.nric], (err3, driverCheck) => {
-		if (driverCheck.rows[0].count == 0)
-			basic(req,res,'clientHelpDesk', {title: 'Help & Support',driver: false});
+		if (req.query.drivermode==='true')
+			basic(req,res,'clientHelpDesk', {title: 'Help & Support',driver: false, drivermode: true});
+		else if (driverCheck.rows[0].count == 0)
+			basic(req,res,'clientHelpDesk', {title: 'Help & Support',driver: false, drivermode: false});
 		else
-			basic(req,res,'clientHelpDesk', {title: 'Help & Support',driver: true});
+			basic(req,res,'clientHelpDesk', {title: 'Help & Support',driver: true, drivermode: false});
 	});
 });
 
 // POST
 router.post('/', function(req, res, next) {
 	pool.query(insert_query, [req.user.nric,req.body.message],(err, data) => {
-		if (err)
-			res.redirect("/clientHelpDesk?add=fail")
-		else
-			res.redirect("/clientHelpDesk?add=success")
+		if (err) {
+			if (req.query.drivermode==='true')
+				res.redirect('/clientHelpDesk?add=fail&drivermode=true')
+			else
+				res.redirect('/clientHelpDesk?add=fail')
+		}
+		else {
+			if (req.query.drivermode==='true')
+				res.redirect('/clientHelpDesk?add=success&drivermode=true')
+			else
+				res.redirect('/clientHelpDesk?add=success')
+		}
+
 	});
 });
 

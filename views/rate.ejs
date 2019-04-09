@@ -24,11 +24,13 @@
 
 <body>
 	<div class="header">
-		<% if (driver) { %>
-		<%- include driverHeader.ejs %>
-		<% } else { %>
-		<%- include passengerHeader.ejs %>
-		<% } %>
+			<% if (drivermode) { %>
+				<%- include driverHeader.ejs %>
+			  <% } else if (!drivermode && driver) { %>
+				<%- include dualHeader.ejs %>
+			  <% } else { %>
+				<%- include passengerHeader.ejs %>
+			  <% } %>
 	</div>
 
 	<div class="main">
@@ -52,7 +54,11 @@
 			<tbody>
 				<% for(var i=0; i<data.length; i++) { %>
 				<tr>
-					<form method="post" action="rate">
+					<% if (drivermode) { %>
+						<form method="post" action="rate?drivermode=true">
+					<% } else { %>
+						<form method="post" action="rate">
+					<% } %>
 						<td><%= data[i].name%></td>
 						<td><%= data[i].source%></td>
 						<td><%= data[i].destination%></td>

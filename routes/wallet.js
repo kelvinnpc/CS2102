@@ -39,10 +39,13 @@ function wallet(req, res, next) {
 				pool.query(isDriver_query, [req.user.nric], (err3, driverCheck) => {
 					pool.query(transaction_query, [req.user.nric], (err3, data3) => {
 						console.log(err);
-						if (driverCheck.rows[0].count == 0)
-							basic(req, res, 'wallet', { title: 'Wallet', driver: false, data: data.rows, data1: data1.rows, data2: data2.rows, data3: data3.rows });
+						if (req.query.drivermode==='true')
+							basic(req, res, 'wallet', { title: 'Wallet', driver: false, drivermode: true, data: data.rows, data1: data1.rows, data2: data2.rows, data3: data3.rows });
+
+						else if (driverCheck.rows[0].count == 0)
+							basic(req, res, 'wallet', { title: 'Wallet', driver: false, drivermode: false, data: data.rows, data1: data1.rows, data2: data2.rows, data3: data3.rows });
 						else
-							basic(req, res, 'wallet', { title: 'Wallet', driver: true, data: data.rows, data1: data1.rows, data2: data2.rows, data3: data3.rows });
+							basic(req, res, 'wallet', { title: 'Wallet', driver: true, drivermode: false, data: data.rows, data1: data1.rows, data2: data2.rows, data3: data3.rows });
 					});
 				});
 			});
@@ -54,11 +57,18 @@ function topUp(req, res, next) {
 	console.log(req.body.bid);
 	pool.query(uses_query, [req.user.nric, req.body.amount], (err, data) => {
 		console.log(err);
-		if (err)
-			res.redirect('/wallet?topUp=fail')
-		else
-			res.redirect('/wallet?topUp=success')
-
+		if (err) {
+			if (req.query.drivermode==='true')
+				res.redirect('/wallet?topUp=fail&drivermode=true')
+			else
+				res.redirect('/wallet?topUp=fail')
+		}
+		else {
+			if (req.query.drivermode==='true')
+				res.redirect('/wallet?topUp=success&drivermode=true')
+			else
+				res.redirect('/wallet?topUp=success')
+		}
 	});
 }
 
