@@ -20,9 +20,10 @@ var sql_query = 'With tempTable as ' +
 	'(SELECT Rides.rid, Rides.did, source, destination, date, numSeats, coalesce(max(points),0) as maxpt ' +
 	'FROM Rides left join Bids on Rides.rid = Bids.rid group by Rides.rid) ' +
 	'Select rid, name, source, destination, date, numSeats, maxpt, ' +
-	'ROUND((SELECT avg(ratings) FROM Rates R1 where R1.ratedID = tempTable.did),2) as ratings ' +
+	'ROUND((SELECT avg(ratings) FROM Rates R1 where R1.ratedID = tempTable.did and ratings>-1),2) as ratings ' +
 	'FROM tempTable join Users on Users.nric = tempTable.did ' +
-	'WHERE tempTable.rid NOT IN (SELECT B.rid FROM Bids B where B.pid=$1) and now()<date and numSeats<>0';
+	'WHERE tempTable.rid NOT IN (SELECT B.rid FROM Bids B where B.pid=$1) and ' +
+	'tempTable.did<>$1 and now()<date and numSeats<>0';
 var post_query = 'INSERT INTO Bids VALUES($1, $2, $3)';
 var wallet_query = 'SELECT balance from Wallet where Wallet.wid = $1';
 var totalBids_query = 'SELECT sum(points) as totalBid from Bids where Bids.pid=$1';

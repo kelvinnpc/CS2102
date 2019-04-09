@@ -20,7 +20,7 @@ var sql_query = 'With tempTable as ' +
 	'(SELECT Rides.rid, Rides.did, source, destination, date, numSeats, coalesce(max(points),0) as maxpt ' +
 	'FROM Rides left join Bids on Rides.rid = Bids.rid group by Rides.rid) ' +
 	'Select T.rid, name, source, destination, date, numSeats, maxpt, status, ' +
-	'ROUND((SELECT avg(ratings) FROM Rates R1 where R1.ratedID = T.did),2) as ratings ' +
+	'ROUND((SELECT avg(ratings) FROM Rates R1 where R1.ratedID = T.did and ratings>-1),2) as ratings ' +
 	'FROM tempTable T join Users on Users.nric = T.did join Bids on T.rid=Bids.rid ' +
 	'WHERE Bids.pid = $1 order by T.rid';
 var post_query = 'INSERT INTO Bids VALUES($1, $2, $3)';

@@ -19,13 +19,13 @@ const pool = new Pool({
 var info_query = 'SELECT * FROM Users where nric=$1';
 var trips_query = `SELECT count(R.rid) q FROM History H join Rides R on H.rid=R.rid where H.userID=$1 and R.date > current_timestamp - interval '30 day'`;
 var passenger_query = `SELECT ROUND(coalesce(avg(Rates.ratings),-1),2) q FROM Rates join Rides on Rates.rid = Rides.rid ` +
-    `WHERE Rates.ratedid=$1 and Rides.date > current_timestamp - interval '30 day'`;
+    `WHERE Rates.ratedid=$1 and ratings>-1 and Rides.date > current_timestamp - interval '30 day'`;
 var passengerAll_query = `SELECT ROUND(coalesce(avg(Rates.ratings),-1),2) q FROM Rates join Rides on Rates.rid = Rides.rid ` +
-    `WHERE Rates.ratedid=$1`;
+    `WHERE Rates.ratedid=$1 and ratings>-1`;
 var drivers_query = `SELECT ROUND(coalesce(avg(Rates.ratings),-1),2) q FROM Rates join Rides on Rates.rid = Rides.rid ` +
-    `WHERE Rates.raterid=$1 and Rides.date > current_timestamp - interval '30 day'`;
+    `WHERE Rates.raterid=$1 and Rides.date > current_timestamp - interval '30 day' and ratings>-1`;
 var driversAll_query = `SELECT ROUND(coalesce(avg(Rates.ratings),-1),2) q FROM Rates join Rides on Rates.rid = Rides.rid ` +
-    `WHERE Rates.raterid=$1`;
+    `WHERE Rates.raterid=$1 and ratings>-1`;
 var isDriver_query = 'SELECT count(did) as count from Drivers where $1 in (select did from drivers)';
 
 router.get('/', profile);
