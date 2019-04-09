@@ -16,7 +16,7 @@
   <body>
 		<div class="header">
 			<% if (driver) { %>
-				<%- include driverHeader.ejs %>
+				<%- include dualHeader.ejs %>
 			<% } else { %>
 				<%- include passengerHeader.ejs %>
 			<% } %>
@@ -44,7 +44,11 @@
 			<tbody>
 				<% for(var i=0; i<data.length; i++) { %>
 				<tr>
-				<form method="post" action="findRide">
+					<% if (driver) { %>
+						<form method="post" action="findRide?driver=true">
+					<% } else { %>
+						<form method="post" action="findRide">
+					<% } %>
 					<td><%= data[i].rid%></td>
 					<td><%= data[i].name%></td>
 					<td><%= data[i].ratings%></td>
