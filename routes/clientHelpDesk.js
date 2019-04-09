@@ -12,12 +12,12 @@ const pool = new Pool({
 
 /* SQL Query */
 var insert_query = 'INSERT INTO accessHelpDesk VALUES ($1,$2)';
-var isDriver_query = 'SELECT count(did) as count from Drivers where $1 in (select did from drivers)';
+var isDriver_query = 'SELECT count(did) as count from Drivers where $1 = did';
 
 // GET
 router.get('/', function(req, res, next) {
-	pool.query(isDriver_query, [req.user.nric], (err3, data0) => {
-		if (data0.rows[0].count == 0)
+	pool.query(isDriver_query, [req.user.nric], (err3, driverCheck) => {
+		if (driverCheck.rows[0].count == 0)
 			basic(req,res,'clientHelpDesk', {title: 'Help & Support',driver: false});
 		else
 			basic(req,res,'clientHelpDesk', {title: 'Help & Support',driver: true});
