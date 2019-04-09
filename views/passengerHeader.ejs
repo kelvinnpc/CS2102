@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+
+.topnav {
+    overflow:hidden;
+    background-color: #333;
+}
+
+.topnav a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+</style>
+</head>
+<body>
+<h1>Welcome <%= name %></h1>
+<div class="topnav" style="padding: 0px">
+  <a class="active" href="/profile">My profile</a>
+  <a href="/findRide">Find Rides</a>
+  <a href="/manageBids">Manage Bids</a>
+  <a href="/wallet">Wallet</a>
+  <a href="/rate">Rate Others</a>
+  <a href="/passengerHistory">Ride History</a>
+  <a href="/registerAsDriver">Register as driver</a>
+  <a href="/clientHelpDesk">Help</a>
+  <a href="/logout">logout</a>
+
+</div>
+
+</body>
+</html>

@@ -1,17 +1,18 @@
-DROP TABLE Rates;
-DROP TABLE Wallet;
-DROP TABLE Uses;
-DROP TABLE Cars;
-DROP TABLE Bids;
-DROP TABLE History;
-DROP TABLE Rides;
-DROP TABLE Drivers;
-DROP TABLE Passengers;
-DROP TABLE Users;
+DROP TABLE IF EXISTS Rates;
+DROP TABLE IF EXISTS Wallet;
+DROP TABLE IF EXISTS Uses;
+DROP TABLE IF EXISTS Cars;
+DROP TABLE IF EXISTS Bids;
+DROP TABLE IF EXISTS History;
+DROP TABLE IF EXISTS Rides;
+DROP TABLE IF EXISTS Drivers;
+DROP TABLE IF EXISTS Passengers;
+DROP TABLE IF EXISTS AccessHelpDesk;
+DROP TABLE IF EXISTS Users;
 
 CREATE TABLE Users (
 	name    varchar(255) NOT NULL,
-	username varchar(255) NOT NULL,
+	username varchar(255) unique NOT NULL,
 	password varchar(255) NOT NULL,
 	nric  varchar(9) PRIMARY KEY,
 	phonenumber varchar(8) NOT NULL,
@@ -29,20 +30,20 @@ CREATE TABLE Drivers (
 );
 
 CREATE TABLE Rides (
-	rid varchar(255) PRIMARY KEY,
+	rid SERIAL PRIMARY KEY,
 	did varchar(9) references Users (nric),
 	source varchar(255) NOT NULL,
 	destination varchar(255) NOT NULL,
-	dates varchar(255) NOT NULL,
-	timing varchar(255) NOT NULL,
-	status varchar(255) NOT NULL
+	numSeats integer,
+	date timestamp
 );
 
 CREATE TABLE Rates (
 	raterID varchar(9) references Users (nric),
 	ratedID varchar(9) references Users (nric),
-	rideID varchar(255) references Rides (rid),
-	ratings int
+	ratings int,
+	rid int references Rides (rid),
+	PRIMARY KEY (raterID, ratedID, rid)
 );
 
 CREATE TABLE Wallet (
@@ -52,10 +53,10 @@ CREATE TABLE Wallet (
 );
 
 CREATE TABLE Uses (
-	timing time NOT NULL,
 	pid varchar(9) references Passengers (pid),
-	transaction varchar(255),
-	primary key (timing, pid)
+	transaction integer,
+	date timestamp default current_timestamp,
+	primary key (date, pid)
 );
 
 CREATE TABLE Cars (
@@ -68,79 +69,186 @@ CREATE TABLE Cars (
 
 CREATE TABLE Bids (
 	pid varchar(9) references Passengers (pid),
-	rid varchar (255) references Rides (rid),
+	rid integer references Rides (rid),
 	points int NOT NULL,
-	primary key (pid, rid, points)
+	status varchar(20) default 'pending',
+	primary key (pid, rid)
 );
 
 CREATE TABLE History (
 	userID varchar(9) references Users (nric),
-	rid varchar(255) references Rides (rid)
+	rid integer references Rides (rid),
+	points integer
 );
+
+create table AccessHelpDesk (
+    userID varchar(9) references Users (nric),
+    message varchar(1000),
+    date timestamp default current_timestamp,
+    primary key (date)
+);
+
+CREATE OR REPLACE FUNCTION rideCheck()
+RETURNS trigger AS
+$$
+DECLARE seatLimit integer;
+BEGIN
+	SELECT numSeats INTO seatLimit FROM Cars C where C.did=NEW.did;
+	IF (NEW.numSeats > seatLimit) THEN RAISE EXCEPTION 'too many seats indicated'; RETURN NULL;
+	END IF;
+	RETURN NEW;
+END;
+$$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER rideCheck
+BEFORE INSERT OR UPDATE ON Rides
+FOR EACH ROW
+EXECUTE PROCEDURE rideCheck();
+
+
+CREATE OR REPLACE FUNCTION topUpCheck()
+RETURNS trigger AS
+$$
+DECLARE currBalance integer;
+BEGIN
+	SELECT balance INTO currBalance from Wallet W where NEW.pid = W.wid;
+	DELETE FROM Wallet W where NEW.pid=W.wid;
+	INSERT INTO Wallet VALUES (NEW.pid, currBalance + NEW.transaction);
+	RETURN NEW;
+END;
+$$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER topUpCheck
+AFTER INSERT OR UPDATE ON Uses
+FOR EACH ROW
+when (NEW.transaction > 0)
+EXECUTE PROCEDURE topUpCheck();
+
+CREATE OR REPLACE FUNCTION updateRideCheck()
+RETURNS trigger AS
+$$
+DECLARE driverID varchar(9);
+BEGIN
+	IF (NEW.numSeats < 0) THEN
+	RAISE EXCEPTION 'No more space left';
+	RETURN NULL;
+	END IF;
+	RETURN NEW;
+END;
+$$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER updateRideCheck
+BEFORE UPDATE ON Rides
+FOR EACH ROW
+EXECUTE PROCEDURE updateRideCheck();
+
+
+
+/* IF user has already placed a bid for that RID, delete that existing bid 
+and insert new bid if
+new bid + all other bid does not exceed wallet amount*/
+CREATE OR REPLACE FUNCTION insertBidCheck()
+RETURNS trigger AS
+$$
+DECLARE totalBids integer; existingBid integer; total integer;
+BEGIN
+	SELECT coalesce(sum(points),0) INTO totalBids FROM Bids where pid=NEW.pid;
+	SELECT coalesce(points,0) INTO existingBid from Bids B where NEW.pid = B.pid and NEW.rid=B.rid;
+	SELECT balance INTO total from Wallet W where w.wid=NEW.pid;
+	IF (NEW.points < 0) THEN RAISE EXCEPTION 'Bid must be > 0';RETURN NULL;
+	END IF;
+	IF (EXISTS (SELECT 1 from Bids B where NEW.pid = B.pid and NEW.rid=B.rid) and 
+			(totalBids-existingBid+NEW.points<=total)) THEN 
+		DELETE FROM Bids B WHERE NEW.pid=B.pid and NEW.rid=B.rid;
+		IF (NEW.points = 0) THEN RETURN NULL;
+		ELSE return NEW;
+		END IF;
+	ELSIF (NOT EXISTS (SELECT 1 from Bids B where NEW.pid = B.pid and NEW.rid=B.rid) and NEW.points = 0) THEN
+		RAISE EXCEPTION 'must bid more than 0 point';
+		return NULL;
+	ELSIF (total < (NEW.points + totalBids)) THEN RAISE EXCEPTION 'not enough points';RETURN NULL;
+	END IF;
+	RETURN NEW;
+END;
+$$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER insertBidCheck
+BEFORE INSERT ON Bids
+FOR EACH ROW
+EXECUTE PROCEDURE insertBidCheck();
+
+CREATE OR REPLACE FUNCTION newUserInit()
+RETURNS trigger AS
+$$
+BEGIN
+	INSERT INTO Passengers(pid) VALUES (NEW.nric);
+	INSERT INTO Wallet(wid,balance) VALUES (NEW.nric,0);
+	INSERT INTO Uses(pid,transaction) VALUES (NEW.nric,0);
+	RETURN NEW;
+END;
+$$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER newUserInit
+AFTER INSERT ON Users
+FOR EACH ROW
+EXECUTE PROCEDURE newUserInit();
 
 --Insert into Users
 INSERT INTO Users (name, username, password, nric, phonenumber, address)
-VALUES ('Leslie Cole', 'LeslieCole', 'password1', 'S0000001A', '12345678', 'Kent Ridge');
+VALUES ('Leslie Cole', 'LeslieCole', '$2b$10$qISl6Wshq80lkZrT2U0EreIF18Eh4kc76QzATG91Rl.PE0oey0CdG', 'S0000001A', '12345678', 'Kent Ridge');
 
 INSERT INTO Users (name, username, password, nric, phonenumber, address)
-VALUES ('Myra Morgan', 'MyraMorgan', 'password1','S0000002B', '12345677', 'Kent Ridge');
+VALUES ('Myra Morgan', 'MyraMorgan', '$2b$10$qISl6Wshq80lkZrT2U0EreIF18Eh4kc76QzATG91Rl.PE0oey0CdG','S0000002B', '12345677', 'Kent Ridge');
 
 INSERT INTO Users (name, username, password, nric, phonenumber, address)
-VALUES ('Raymond Benson', 'RaymondBenson', 'password1', 'S0000003C', '12345676', 'Kent Ridge');
+VALUES ('Raymond Benson', 'RaymondBenson', '$2b$10$qISl6Wshq80lkZrT2U0EreIF18Eh4kc76QzATG91Rl.PE0oey0CdG', 'S0000003C', '12345676', 'Kent Ridge');
 
 INSERT INTO Users (name, username, password, nric, phonenumber, address)
-VALUES ('Wendy Kelley', 'WendyKelley', 'password1', 'S0000004D', '12345675', 'Kent Ridge');
+VALUES ('Wendy Kelley', 'WendyKelley', '$2b$10$qISl6Wshq80lkZrT2U0EreIF18Eh4kc76QzATG91Rl.PE0oey0CdG', 'S0000004D', '12345675', 'Kent Ridge');
 
 INSERT INTO Users (name, username, password, nric, phonenumber, address)
-VALUES ('Patrick Bowers', 'PatrickBowers', 'password1', 'S0000005E', '12345674', 'Kent Ridge');
+VALUES ('Patrick Bowers', 'PatrickBowers', '$2b$10$qISl6Wshq80lkZrT2U0EreIF18Eh4kc76QzATG91Rl.PE0oey0CdG', 'S0000005E', '12345674', 'Kent Ridge');
 
 INSERT INTO Users (name, username, password, nric, phonenumber, address)
-VALUES ('Ralph Hogan', 'RalphHogan', 'password1', 'S0000006F', '12345673', 'Kent Ridge');
+VALUES ('Ralph Hogan', 'RalphHogan', '$2b$10$qISl6Wshq80lkZrT2U0EreIF18Eh4kc76QzATG91Rl.PE0oey0CdG', 'S0000006F', '12345673', 'Kent Ridge');
 
 INSERT INTO Users (name, username, password, nric, phonenumber, address)
-VALUES ('Cecil Rodriquez', 'CecilRodriquez', 'password1', 'S0000007G', '12345672', 'Kent Ridge');
+VALUES ('Cecil Rodriquez', 'CecilRodriquez', '$2b$10$qISl6Wshq80lkZrT2U0EreIF18Eh4kc76QzATG91Rl.PE0oey0CdG', 'S0000007G', '12345672', 'Kent Ridge');
 
 INSERT INTO Users (name, username, password, nric, phonenumber, address)
-VALUES ('Delia Ferguson', 'DeliaFerguson', 'password1', 'S0000008H', '12345671', 'Kent Ridge');
+VALUES ('Delia Ferguson', 'DeliaFerguson', '$2b$10$qISl6Wshq80lkZrT2U0EreIF18Eh4kc76QzATG91Rl.PE0oey0CdG', 'S0000008H', '12345671', 'Kent Ridge');
 
 INSERT INTO Users (name, username, password, nric, phonenumber, address)
-VALUES ('Frances Wright', 'FrancesWright', 'password1', 'S0000009I', '12345670', 'Kent Ridge');
+VALUES ('Frances Wright', 'FrancesWright', '$2b$10$qISl6Wshq80lkZrT2U0EreIF18Eh4kc76QzATG91Rl.PE0oey0CdG', 'S0000009I', '12345670', 'Kent Ridge');
 
 INSERT INTO Users (name, username, password, nric, phonenumber, address)
-VALUES ('Alyssa Sims', 'AlyssaSims', 'password1', 'S0000010J', '12345681', 'Kent Ridge');
+VALUES ('Alyssa Sims', 'AlyssaSims', '$2b$10$qISl6Wshq80lkZrT2U0EreIF18Eh4kc76QzATG91Rl.PE0oey0CdG', 'S0000010J', '12345681', 'Kent Ridge');
 --Insert into Drivers
 INSERT INTO Drivers (did) VALUES 
 ('S0000001A'),
 ('S0000004D');
 
 --Insert into Rides
-INSERT INTO Rides (rid, did, source, destination, dates, timing, status) VALUES
-('0001', 'S0000001A', 'Kent Ridge', 'Buona', '2019-01-29', '13:03:00', 'Pending'),
-('0002', 'S0000001A', 'Buona', 'Kent Ridge', '2019-01-31', '17:03:00', 'Pending'),
-('0003', 'S0000004D', 'Kent Ridge', 'Buona', '2019-01-31', '13:05:00', 'Pending');
+INSERT INTO Rides (did, source, destination, numSeats,date) VALUES
+('S0000001A', 'Kent Ridge', 'Buona',1,'2019/04/02 16:04'),
+('S0000001A', 'Buona', 'Kent Ridge',2, '2019/05/12 16:04'),
+('S0000004D', 'Kent Ridge', 'Buona',3,'2019/03/22 16:04');
 
-CREATE OR REPLACE FUNCTION balance_check()
-RETURNS TRIGGER AS $$
-BEGIN
-	IF (SELECT balance from Wallet where NEW.pid = Wallet.wid) < NEW.points
-	THEN RETURN NULL;
-	-- If passenger try to rebid....
-	-- ELSIF (EXISTS(SELECT points as oldPt from Bids where (Bids.pid = NEW.pid) and (Bids.rid = NEW.rid)))
-	-- THEN 
-	-- 	UPDATE Wallet
-	-- 	SET balance = balance + oldPt
-	-- 	WHERE Wallet.wid = NEW.pid;
-	-- 	DELETE from Bids
-	-- 	WHERE Bids.pid = NEW.pid and Bids.rid = NEW.rid;
-	END IF;
-	UPDATE Wallet
-	SET balance = (balance - NEW.points)
-	WHERE Wallet.wid = NEW.pid;
-	RETURN NEW;
-END; $$
-LANGUAGE plpgsql;
+INSERT INTO Uses(pid,transaction) VALUES ('S0000002B',500), ('S0000001A',500),('S0000004D',500);
+INSERT INTO BIDS(pid,rid,points) VALUES ('S0000002B',1,100);
+INSERT INTO BIDS(pid,rid,points) VALUES ('S0000002B',1,150);
+INSERT INTO BIDS(pid,rid,points) VALUES ('S0000001A',5,160),('S0000002B',5,150),('S0000004D',5,140);
 
-CREATE TRIGGER check_bid_points_when_bidding
-	BEFORE INSERT on Bids
-	FOR EACH ROW
-	EXECUTE PROCEDURE balance_check();
+
+Select * from bids;
+
+/* complicated query */
+select coalesce(sum(case when transaction >= 0 then transaction end),0) as topUp,
+						coalesce(sum(case when transaction < 0 then transaction end),0) as deducted, 
+						to_char(date, 'YYYY-MM') as year_month from uses where 's7654321z' = uses.pid group by year_month order by year_month;
+

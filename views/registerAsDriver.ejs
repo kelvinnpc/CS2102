@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+		<!-- Page Title -->
+    <title>Register As Driver</title>
+    <link rel='stylesheet' href='/stylesheets/loggedinStyle.css' />
+		
+		<!-- CSS for Styling -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+		
+		<!-- JavaScript for Interactivity -->
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+	
+  </head>
+  <body>
+        <div class="header">
+            <%- include passengerHeader.ejs %>
+        </div>
+    
+    <div class="main">
+    <h1>Registering as driver</h1>
+		<form id="html_form" action="registerAsDriver" role="form" method="post">
+			<div class="form-group">
+				<label for="plateNumber">Car plate number</label>
+                <input type="text" class="form-control" id="plateNumber" name="plateNumber" required=true placeholder="Enter your car plate number">
+                <small id="nameHelp" class="form-text text-muted">Drivers are not allowed to share cars with others.</small>
+			</div>
+			<div class="form-group">
+				<label for="model">Car model</label>
+				<input type="text" class="form-control" id="model" name="model" required=true placeholder="Enter your car model">
+			</div>
+			<div class="form-group">
+				<label for="numSeats">Maximum capacity of car</label>
+                <input type="number" class="form-control" id="numSeats" name="numSeats" required=true placeholder="Enter your car capacity" min="1" max="7">
+                <small id="nameHelp" class="form-text text-muted">Excluding the driver.</small>
+			</div>
+
+			<button type="submit" class="btn btn-primary">Register</button>
+		</form>
+	</div>
+  </body>
+</html>

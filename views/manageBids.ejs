@@ -2,8 +2,8 @@
 <html>
   <head>
 		<!-- Page Title -->
-    <title>CS2102 Database Connect</title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <title>Manage Bids</title>
+    <link rel='stylesheet' href='/stylesheets/loggedinStyle.css' />
 		
 		<!-- CSS for Styling -->
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
@@ -14,53 +14,61 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
   </head>
   <body>
-  	<div style = "background-color: PALEGOLDENROD">Available balance: <%= data1[0].balance%></div>
-  	<p>Welcome <%= name %></p>
+			<div class="header">
+					<% if (driver) { %>
+						<%- include driverHeader.ejs %>
+					<% } else { %>
+						<%- include passengerHeader.ejs %>
+					<% } %>
+				</div>
+
+		<div class="main">
+	  <div style = "background-color: PALEGOLDENROD">Available balance (before deducting existing bids): <%= data1[0].balance %> <br>
+		Available balance (after deducting existing bids): <%= data1[0].balance - data2[0].totalbid %>
+		</div>
     <h1><%= title%></h1>
 		<table class="table">
 			<thead>
 				<tr>
-				<!--
-					<th scope="col">Matric</th>
-					<th scope="col">Name</th>
-					<th scope="col">Faculty</th>
-				-->
 					<th scope="col">Ride ID</th>
 					<th scope="col">Driver name</th>
+					<th scope="col">Driver Rating</th>
 					<th scope="col">Source</th>
 					<th scope="col">Destination</th>
-					<th scope="col">Date</th>
-					<th scope="col">Time</th>
-					<th scope="col">Status</th>
-					<th scope="col">Highest Bid</th>
+					<th scope="col">Departing Time</th>
+					<th scope="col">Number of seats left</th>
+          <th scope="col">Highest Bid</th>
+          <th scope="col">Your Bid</th>
 					<th scope="col">Bid</th>
 				</tr>
 			</thead>
 			<tbody>
 				<% for(var i=0; i<data.length; i++) { %>
 				<tr>
-				<!--
-					<td><%= data[i].matric%></td>
-					<td><%= data[i].name%></td>
-					<td><%= data[i].faculty%></td>
-			--><form method="post" action="passenger">
+				<form method="post" action="manageBids">
 					<td><%= data[i].rid%></td>
 					<td><%= data[i].name%></td>
+					<td><%= data[i].ratings%></td>
 					<td><%= data[i].source%></td>
 					<td><%= data[i].destination%></td>
-					<td><%= data[i].dates%></td>
-					<td><%= data[i].timing%></td>
-					<td><%= data[i].status%></td>
-					<td><%= data[i].maxpt%></td>
+					<td><%= data[i].date%></td>
+					<td><%= data[i].numseats%></td>
+          <td><%= data[i].maxpt%></td>
+          <td><%= data3[i].points%></td>
+					<% if (data[i].status==='pending') { %>
 					<td>
-						<input type="text" class="form-control" id="bid" name="bid" placeholder="Enter your bid point">
-						<button type="submit" class="btn btn-primary" name="rid" value="<%= data[i].rid%>">Bid</button>
+						<input type="number" class="form-control" id="bid" name="bid" placeholder="Enter your new bid point">
+						<button type="submit" class="btn btn-primary" name="rid" value="<%= data[i].rid%>">Update Bid</button>
 					</td>
+					<% } else { %>
+						<td>Ride Confirmed</td>
+						<% } %>
 				</form>
 				</tr>
 				<% } %>
 			</tbody>
 		</table>
+		</div>
 		<script>
 			
 		</script>

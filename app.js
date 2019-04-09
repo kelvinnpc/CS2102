@@ -22,29 +22,30 @@ var usersRouter = require('./routes/users');
 var aboutRouter = require('./routes/about');
 /* ---------------------------- */
 
-/* --- V3: Basic Template   --- */
-var tableRouter = require('./routes/table');
-var loopsRouter = require('./routes/loops');
-/* ---------------------------- */
 
-/* --- V4: Database Connect --- */
-var selectRouter = require('./routes/select');
-/* ---------------------------- */
-var passengerRouter = require('./routes/passenger');
-/* --- V5: Adding Forms     --- */
-var formsRouter = require('./routes/forms');
-/* ---------------------------- */
+
+var findRideRouter = require('./routes/findRide');
+
 
 /* --- V6: Modify Database  --- */
-var insertRouter = require('./routes/insert');
+var registerRouter = require('./routes/register');
 /* ---------------------------- */
 
 /* --- CheeYeo: Additions to our webapp --- */
 var loginRouter = require('./routes/login');
+var clientHelpRouter = require('./routes/clientHelpDesk');
+var manageBidsRouter = require('./routes/manageBids');
+var walletRouter = require('./routes/wallet');
+var regDriverRouter = require('./routes/registerAsDriver');
 /* ---------------------------- */
 
-var driverRouter = require('./routes/driver');
+var advertiseRideRouter = require('./routes/advertiseRide');
 var driverhistoryRouter = require('./routes/driverhistory');
+var selectPassengerRouter = require('./routes/selectPassenger');
+var rateRouter = require('./routes/rate');
+var profileRouter = require('./routes/profile');
+var passengerHistoryRouter = require('./routes/passengerHistory');
+var logoutRouter = require('./routes/logout');
 
 var app = express();
 
@@ -76,32 +77,30 @@ app.use('/users', usersRouter);
 /* --- V2: Adding Web Pages --- */
 app.use('/about', aboutRouter);
 /* ---------------------------- */
+app.use('/findRide', findRideRouter);
 
-/* --- V3: Basic Template   --- */
-app.use('/table', tableRouter);
-app.use('/loops', loopsRouter);
-/* ---------------------------- */
-
-/* --- V4: Database Connect --- */
-app.use('/select', selectRouter);
-/* ---------------------------- */
-app.use('/passenger', passengerRouter);
-/* --- V5: Adding Forms     --- */
-app.use('/forms', formsRouter);
-/* ---------------------------- */
-
-app.use('/driver', driverRouter);
+app.use('/advertiseRide', advertiseRideRouter);
 app.use('/driverhistory', driverhistoryRouter);
+app.use('/selectPassenger', selectPassengerRouter);
 
 /* --- V6: Modify Database  --- */
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use('/insert', insertRouter);
+app.use('/register', registerRouter);
 /* ---------------------------- */
 
 /* --- CheeYeo: Additions to our webapp --- */
-app.use('/login', loginRouter)
+app.use('/login', loginRouter);
+app.use('/clientHelpDesk',clientHelpRouter);
+app.use('/manageBids',manageBidsRouter);
+app.use('/wallet',walletRouter);
+app.use('/registerAsDriver',regDriverRouter);
+app.use('/rate',rateRouter);
+app.use('/profile',profileRouter);
+app.use('/passengerHistory',passengerHistoryRouter);
+app.use('/logout',logoutRouter);
+
 /* ---------------------------- */
 
 
