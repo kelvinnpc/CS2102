@@ -15,7 +15,7 @@ const pool = new Pool({
 });
 
 
-/* SQL Query */
+/* SQL Queries */
 var info_query = 'SELECT * FROM Users where nric=$1';
 var trips_query = `SELECT count(R.rid) q FROM History H join Rides R on H.rid=R.rid where H.userID=$1 and R.date > current_timestamp - interval '30 day'`;
 var passenger_query = `SELECT ROUND(coalesce(avg(Rates.ratings),-1),2) q FROM Rates join Rides on Rates.rid = Rides.rid ` + 
