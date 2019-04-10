@@ -3,7 +3,7 @@
   <head>
 		<!-- Page Title -->
     <title>Create new account</title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href='/stylesheets/loggedinStyle.css' />
 		
 		<!-- CSS for Styling -->
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
@@ -19,8 +19,10 @@
 		
   </head>
   <body>
-	  
-    <h1>Creating new account</h1>
+	<div class="header">
+		<%- include welcomeHeader.ejs %>
+	</div>  
+    <h1>Sign Up Page</h1>
 		<form id="html_form" action="register" role="form" method="post">
 <!-- Carpooling User Sign up details -->
 			<div class="form-group">

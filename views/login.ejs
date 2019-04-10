@@ -4,7 +4,7 @@
 <head>
   <!-- Page Title -->
   <title>Log in Page</title>
-  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <link rel='stylesheet' href='/stylesheets/loggedinStyle.css' />
 
   <!-- CSS for Styling -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
@@ -23,19 +23,21 @@
 </head>
 
 <body>
-  <h1>Log In</h1>
-  <p>Enter your username and password</p><br />
-  <form method="post" action="login">
-    <div class="form-group">
-      <label for="username">Username</label>
-      <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username">
-    </div>
-    <div class="form-group">
-      <label for="password">Password</label>
-      <input type="text" class="form-control" id="password" name="password" placeholder="Enter your password">
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-  </form>
+  <div class="header">
+    <%- include welcomeHeader.ejs %>
+  </div>
+  <h1>Login Page</h1>
+    <form method="post" action="login">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username">
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="text" class="form-control" id="password" name="password" placeholder="Enter your password">
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
 </body>
 
 </html>
