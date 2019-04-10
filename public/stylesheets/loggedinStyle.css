@@ -1,3 +1,13 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  height: 100vh;
+  width: 100vw;
+}
+
 .main {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
@@ -10,37 +20,52 @@
 a {
   color: #00B7FF;
 }
-
-/* body {
-
+.loginContainer {
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 50%;
+  height: 50%;
+  /* flex-grow: 1; incase logincontainer is contained in another */ 
+}
+.loginContainer button {
+  display: flex;
+  justify-content: center;
+}
+.registerContainer {
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 80%;
+  width: 80%;
+  /* border: 1px solid red; */
+}
+.registerForm {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.formFieldsContainer {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 70%;
+  /* border: 1px solid blue; */
 }
 
-.main div {
-
+.registerContainer .form-group {
+  width:50%;
+  padding: 0px 10px;
 }
 
-.button {
-
+.mainPageContainer {
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: calc(100vh - 109px);
+  display: flex;
 }
-
-.navbar {
-  ...
-}
-.navbar button {
-
-}
-
-.button {
-  background: asdas
-}
-#home {
-  ...
-  background: asdawd
-}
-
-
-<button id='home' class='appButton'/>
-<button class='loginButton/>
-<div class='navbar'>
-  <button?
-</div> */
