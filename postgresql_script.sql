@@ -1,13 +1,13 @@
-DROP TABLE IF EXISTS Rates;
-DROP TABLE IF EXISTS Wallet;
 DROP TABLE IF EXISTS Uses;
+DROP TABLE IF EXISTS AccessHelpDesk;
+DROP TABLE IF EXISTS History;
 DROP TABLE IF EXISTS Cars;
 DROP TABLE IF EXISTS Bids;
-DROP TABLE IF EXISTS History;
+DROP TABLE IF EXISTS Wallet;
+DROP TABLE IF EXISTS Rates;
 DROP TABLE IF EXISTS Rides;
 DROP TABLE IF EXISTS Drivers;
 DROP TABLE IF EXISTS Passengers;
-DROP TABLE IF EXISTS AccessHelpDesk;
 DROP TABLE IF EXISTS Users;
 
 CREATE TABLE Users (
@@ -35,6 +35,7 @@ CREATE TABLE Rides (
 	source varchar(255) NOT NULL,
 	destination varchar(255) NOT NULL,
 	numSeats integer,
+	status varchar(20) default 'open', /* 2 status 'open' and 'close' */
 	date timestamp
 );
 
@@ -71,7 +72,7 @@ CREATE TABLE Bids (
 	pid varchar(9) references Passengers (pid),
 	rid integer references Rides (rid),
 	points int NOT NULL,
-	status varchar(20) default 'pending',
+	status varchar(20) default 'pending', /* 3 status 'pending', 'rejected', 'Ride Confirmed' */
 	primary key (pid, rid)
 );
 
@@ -242,7 +243,8 @@ INSERT INTO Rides (did, source, destination, numSeats,date) VALUES
 INSERT INTO Uses(pid,transaction) VALUES ('S0000002B',500), ('S0000001A',500),('S0000004D',500);
 INSERT INTO BIDS(pid,rid,points) VALUES ('S0000002B',1,100);
 INSERT INTO BIDS(pid,rid,points) VALUES ('S0000002B',1,150);
-INSERT INTO BIDS(pid,rid,points) VALUES ('S0000001A',5,160),('S0000002B',5,150),('S0000004D',5,140);
+INSERT INTO BIDS(pid,rid,points) VALUES ('S0000001A',4,1),('S0000002B',4,2),('S0000004D',4,3),
+('S0000001A',6,1),('S0000002B',6,2),('S0000004D',6,3),('S0000001A',5,1),('S0000002B',5,2),('S0000004D',5,3);
 
 
 Select * from bids;

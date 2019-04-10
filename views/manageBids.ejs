@@ -26,7 +26,8 @@
 	  <div style = "background-color: PALEGOLDENROD">Available balance (before deducting existing bids): <%= data1[0].balance %> <br>
 		Available balance (after deducting existing bids): <%= data1[0].balance - data2[0].totalbid %>
 		</div>
-    <h1><%= title%></h1>
+		<h1><%= title%></h1>
+		<p>Enter bid = 0 to retract bid</p>
 		<table class="table">
 			<thead>
 				<tr>
@@ -60,9 +61,11 @@
 						<input type="number" class="form-control" id="bid" name="bid" placeholder="Enter your new bid point">
 						<button type="submit" class="btn btn-primary" name="rid" value="<%= data[i].rid%>">Update Bid</button>
 					</td>
+					<% } else if (data[i].status === 'rejected') { %>
+						<td>Bid rejected</td>
 					<% } else { %>
-						<td>Ride Confirmed</td>
-						<% } %>
+						<td>Ride confirmed</td>
+					<% } %>
 				</form>
 				</tr>
 				<% } %>

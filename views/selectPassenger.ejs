@@ -42,7 +42,11 @@
 				<form method="post" action="selectPassenger">
 					<td><%= data[i].rid%></td>
 					<td><%= data[i].name%></td>
-					<td><%= data[i].ratings%></td>
+					<td><% if (data[i].ratings == -1 || !data[i].ratings) { %>no rating 
+                        <% } else { %>
+                            <%= data[i].ratings%>
+                        <% } %>
+                    </td>
 					<td><%= data[i].source%></td>
 					<td><%= data[i].destination%></td>
 					<td><%= data[i].date%></td>
