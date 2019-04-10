@@ -1,47 +1,61 @@
 <!DOCTYPE html>
 <html>
-  <head>
-		<!-- Page Title -->
-    <title>Profile</title>
-    <link rel='stylesheet' href='/stylesheets/loggedinStyle.css' />
-		
-		<!-- CSS for Styling -->
-		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-		
-		<!-- JavaScript for Interactivity -->
-		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
-  </head>
-  <body>
-		<div class="header">
-        <% if (drivermode) { %>
-          <%- include driverHeader.ejs %>
-        <% } else if (!drivermode && driver) { %>
-          <%- include dualHeader.ejs %>
-        <% } else { %>
-          <%- include passengerHeader.ejs %>
-        <% } %>
-		</div>
 
-		<div class="main">
+<head>
+  <!-- Page Title -->
+  <title>Profile</title>
+  <link rel='stylesheet' href='/stylesheets/appStyle.css' />
+
+  <!-- CSS for Styling -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+    integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+  <!-- JavaScript for Interactivity -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+    integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+    integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+    crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <div class="header">
+    <% if (drivermode) { %>
+    <%- include driverHeader.ejs %>
+    <% } else if (!drivermode && driver) { %>
+    <%- include dualHeader.ejs %>
+    <% } else { %>
+    <%- include passengerHeader.ejs %>
+    <% } %>
+  </div>
+
+  <div class="main">
     <h1><%= title%></h1>
     <h2>Basic Information</h2>
-        <h3>
-            Name: <%= data[0].name %><br>
-            User Name: <%= data[0].username %><br>
-            NRIC: <%= data[0].nric %><br>
-            Phone Number: <%= data[0].phonenumber %><br>
-            Address: <%= data[0].address %>
-        </h3>
-        <h2>Statistics</h2>
-        <h3>
-            Total trips in the last 30 days        : <%= count %><br>
-            Your average rating in the last 30 days: <% if (passenger30 >=0) { %> <%= passenger30 %> <% } else { %>  No one has rated you in the past 30 days <% } %><br>
-            Your overall rating                    : <% if (passengerall >=0) { %> <%= passengerall %> <% } else { %>  No one has rated you <% } %><br>
-            Average rating for drivers in the last 30 days: <% if (driver30 >=0) { %> <%= driver30 %> <% } else { %>  You have not rated anyone in the past 30 days <% } %><br>
-            Overall rating for drivers                    : <% if (driverall >=0) { %> <%= driverall %> <% } else { %>  You have not rated anyone <% } %><br>
-        </h3>
-		</div>
-  </body>
+    <h3>
+      Name: <%= data[0].name %><br>
+      User Name: <%= data[0].username %><br>
+      NRIC: <%= data[0].nric %><br>
+      Phone Number: <%= data[0].phonenumber %><br>
+      Address: <%= data[0].address %>
+    </h3>
+    <h2>Statistics</h2>
+    <h3>
+      Total trips in the last 30 days : <%= count %><br>
+      Your average rating in the last 30 days: <% if (passenger30 >=0) { %> <%= passenger30 %> <% } else { %> No one has
+      rated you in the past 30 days <% } %><br>
+      Your overall rating : <% if (passengerall >=0) { %> <%= passengerall %> <% } else { %> No one has rated you
+      <% } %><br>
+      Average rating for drivers in the last 30 days: <% if (driver30 >=0) { %> <%= driver30 %> <% } else { %> You have
+      not rated anyone in the past 30 days <% } %><br>
+      Overall rating for drivers : <% if (driverall >=0) { %> <%= driverall %> <% } else { %> You have not rated anyone
+      <% } %><br>
+    </h3>
+  </div>
+</body>
+
 </html>
