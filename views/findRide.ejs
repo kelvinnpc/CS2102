@@ -48,14 +48,20 @@
 					<form method="post" action="findRide">
 					<td><%= data[i].rid%></td>
 					<td><%= data[i].name%></td>
-					<td><%= data[i].ratings%></td>
+					<td>
+							<% if (data[i].ratings == -1 || !data[i].ratings) { %>
+								no rating 
+							<% } else { %>
+								<%= data[i].ratings%>
+							<% } %>
+					</td>
 					<td><%= data[i].source%></td>
 					<td><%= data[i].destination%></td>
 					<td><%= data[i].date%></td>
 					<td><%= data[i].numseats%></td>
 					<td><%= data[i].maxpt%></td>
 					<td>
-						<input type="number" class="form-control" id="bid" name="bid" placeholder="Enter your bid point">
+						<input type="number" class="form-control" id="bid" name="bid" placeholder="Enter your bid">
 						<button type="submit" class="btn btn-primary" name="rid" value="<%= data[i].rid%>">Bid</button>
 					</td>
 				</form>
