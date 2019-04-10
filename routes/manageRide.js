@@ -16,11 +16,12 @@ const pool = new Pool({
 
 
 /* SQL Query */
-var select_query = 'Select Bids.pid, Rides.rid, Rides.status, Users.name, Users.phonenumber, source, destination, date, numSeats, Bids.points, ' +
+var biddedRides_query = 'Select Bids.pid, Rides.rid, Rides.status, Users.name, Users.phonenumber, source, destination, date, numSeats, Bids.points, ' +
                 'ROUND((SELECT avg(ratings) FROM Rates R1 where R1.ratedID = Bids.pid),2) as ratings, ' +
                 `(SELECT count(pid) FROM Bids where Bids.status = 'Ride Confirmed' and Bids.rid = Rides.rid group by Rides.rid) as count ` +
-				`FROM (Rides join Bids on Bids.rid = Rides.rid) join Users on Users.nric=Bids.pid ` +
-                `WHERE Rides.did=$1 and Bids.status = 'Ride Confirmed'`;
+								`FROM (Rides join Bids on Bids.rid = Rides.rid) join Users on Users.nric=Bids.pid ` +
+								`WHERE Rides.did=$1 and Bids.status = 'Ride Confirmed' order by Rides.status desc`;
+var notBiddedRides_query = 'Select * from Rides where Rides.rid not in (select rid from bids) and Rides.did=$1 order by Rides.status desc';
 var passengerDeduction_query = `INSERT INTO Uses(pid,transaction) ` +
 															`select pid, points*-1 from bids where status='Ride Confirmed' and rid = $1`;
 var driverAddition_query =	`INSERT INTO Uses(pid,transaction,date) ` +
@@ -34,15 +35,17 @@ router.post('/', select);
 
 function manageRide(req,res,next){
 	pool.connect(function(err,client,done) {
-		client.query(select_query,[req.user.nric], function(err,res2) {
-			console.log(err);
-			var passengersArrays = [];
-      while (res2.rows.length > 0) {
-      	passengersArrays.push(res2.rows.splice(0, res2.rows[0].count));
-			}
+		client.query(biddedRides_query,[req.user.nric], function(err,res2) {
+			client.query(notBiddedRides_query,[req.user.nric], function(err,notBiddedRides) {
+				console.log(err);
+				var passengersArrays = [];
+				while (res2.rows.length > 0) {
+					passengersArrays.push(res2.rows.splice(0, res2.rows[0].count));
+				}
 
-			done();
-			basic(req,res,'manageRide', {title: 'Manage rides', passenger: passengersArrays});
+				done();
+				basic(req,res,'manageRide', {title: 'Manage rides', passenger: passengersArrays, notBiddedRides: notBiddedRides.rows});
+			});
 		});
 	});
 }
@@ -51,33 +54,47 @@ function manageRide(req,res,next){
 
 function select(req,res,next) {
 	pool.connect(function(err,client,done) {
-		function abort(err) {
-			if (err) { client.query('ROLLBACK', function(err) { done(); });
-						res.redirect('/manageRide?update=fail');
-						return true;}
-
-			return false;
+		if (req.query.noPassenger==='true') {
+			client.query(updateRideStatus_query, [req.body.noPassenger], function (err, res9) {
+				if (err) {
+					done();
+					res.redirect('/manageRide?update=fail');
+				}
+				else {
+					done();
+					res.redirect('/manageRide?update=success');
+				}
+			});
 		}
-		client.query('BEGIN', function (err, res1) {
-			if (abort(err)) { return; }
-			client.query(passengerDeduction_query, [req.body.val], function (err, res4) {
+		else {
+			function abort(err) {
+				if (err) { client.query('ROLLBACK', function(err) { done(); });
+							res.redirect('/manageRide?update=fail');
+							return true;}
+
+				return false;
+			}
+			client.query('BEGIN', function (err, res1) {
 				if (abort(err)) { return; }
-				client.query(driverAddition_query, [req.body.val, req.user.nric], function (err, res6) {
+				client.query(passengerDeduction_query, [req.body.val], function (err, res4) {
 					if (abort(err)) { return; }
-					client.query(refundPoints_query, [req.body.val], function (err, res9) {
+					client.query(driverAddition_query, [req.body.val, req.user.nric], function (err, res6) {
 						if (abort(err)) { return; }
-						client.query(updateRideStatus_query, [req.body.val], function (err, res9) {
+						client.query(refundPoints_query, [req.body.val], function (err, res9) {
 							if (abort(err)) { return; }
-							client.query('COMMIT', function (err, res10) {
+							client.query(updateRideStatus_query, [req.body.val], function (err, res9) {
 								if (abort(err)) { return; }
-								done();
-								res.redirect('/manageRide?update=success');
+								client.query('COMMIT', function (err, res10) {
+									if (abort(err)) { return; }
+									done();
+									res.redirect('/manageRide?update=success');
+								});
 							});
 						});
 					});
 				});
-			});
-		});
+			});			
+		}
 	});
 }
 
