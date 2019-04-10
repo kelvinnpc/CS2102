@@ -13,66 +13,103 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
   </head>
-  <body>
-		<div class="header">
-			<%- include driverHeader.ejs %>
-		</div>
-		
-		<div class="main">
+<body>
+	<div class="header">
+		<%- include driverHeader.ejs %>
+	</div>
 
-				<h1><%= title%></h1>
-				<table class="table">
-					<thead>
-						<tr>
-							<th scope="col">Ride ID</th>
-							<th scope="col">Source</th>
-							<th scope="col">Destination</th>
-							<th scope="col">Depart Time</th>
-							<th scope="col">Number of Seats Left</th>
-							<th scope="col">Passenger Name</th>
-							<th scope="col">Passenger Phone Number</th>
-							<th scope="col">Passenger bid</th>
-							<th scope="col">Close Ride</th>
-							
-						</tr>
-					</thead>
-					<tbody>
-							<% passenger.forEach( function( passenger ) { %>
-								<% for(var i=0; i<passenger[0].count; i++) { %>
-								<tr>
+	<div class="main">
 
-								<form method="post" action="manageRide">
-								<% if (i===0) { %>
-									<td rowspan="<%= passenger[0].count %>"><%= passenger[i].rid%></td>
-									<td rowspan="<%= passenger[0].count %>"><%= passenger[i].source%></td>
-									<td rowspan="<%= passenger[0].count %>"><%= passenger[i].destination%></td>
-									<td rowspan="<%= passenger[0].count %>"><%= passenger[i].date%></td>
-									<td rowspan="<%= passenger[0].count %>"><%= passenger[i].numseats%></td>
-								<% } %>
-								<td><%= passenger[i].name%></td>
-								<td><%= passenger[i].phonenumber%></td>
-								<td><%= passenger[i].points%></td>
-								
-								<% if (i===0) { %>
-									<% if (passenger[0].status==='close') { %>
-										<td>Ride closed</td>
-									<% } else {%>
-										<td>
-											<button type="submit" class="btn btn-primary" id="val" name="val" 
-											value="<%= passenger[0].rid %>">Select</button>
-										</td>
-									<% } %>
-								<% } %>
+		<h1><%= title%></h1>
+		<br>
+		<h2>Rides with confirmed passengers</h2>
+		<table class="table">
+			<thead>
+				<tr>
+					<th scope="col">Ride ID</th>
+					<th scope="col">Source</th>
+					<th scope="col">Destination</th>
+					<th scope="col">Depart Time</th>
+					<th scope="col">Number of Seats Left</th>
+					<th scope="col">Passenger Name</th>
+					<th scope="col">Passenger Phone Number</th>
+					<th scope="col">Passenger bid</th>
+					<th scope="col">Close Ride</th>
 
-								</form>
-								</tr>
+				</tr>
+			</thead>
+			<tbody>
+				<% passenger.forEach( function( passenger ) { %>
+				<% for(var i=0; i<passenger[0].count; i++) { %>
+				<tr>
+
+					<form method="post" action="manageRide">
+						<% if (i===0) { %>
+						<td rowspan="<%= passenger[0].count %>"><%= passenger[i].rid%></td>
+						<td rowspan="<%= passenger[0].count %>"><%= passenger[i].source%></td>
+						<td rowspan="<%= passenger[0].count %>"><%= passenger[i].destination%></td>
+						<td rowspan="<%= passenger[0].count %>"><%= passenger[i].date%></td>
+						<td rowspan="<%= passenger[0].count %>"><%= passenger[i].numseats%></td>
+						<% } %>
+						<td><%= passenger[i].name%></td>
+						<td><%= passenger[i].phonenumber%></td>
+						<td><%= passenger[i].points%></td>
+
+						<% if (i===0) { %>
+						<% if (passenger[0].status==='close') { %>
+						<td>Ride closed</td>
+						<% } else {%>
+						<td>
+							<button type="submit" class="btn btn-primary" id="val" name="val"
+								value="<%= passenger[0].rid %>">Close Ride</button>
+						</td>
+						<% } %>
+						<% } %>
+
+					</form>
+				</tr>
+				<% } %>
+				<% }) %>
+			</tbody>
+		</table>
+
+		<table class="table">
+			<thead>
+				<tr>
+					<th scope="col">Ride ID</th>
+					<th scope="col">Source</th>
+					<th scope="col">Destination</th>
+					<th scope="col">Depart Time</th>
+					<th scope="col">Number of Seats Left</th>
+					<th scope="col">Close Ride</th>
+				</tr>
+			</thead>
+			<tbody>
+				<% for(var i=0; i<notBiddedRides.length; i++) { %>
+				<tr>
+					<form method="post" action="manageRide?noPassenger=true">
+						<td><%= notBiddedRides[i].rid%></td>
+						<td><%= notBiddedRides[i].source%></td>
+						<td><%= notBiddedRides[i].destination%></td>
+						<td><%= notBiddedRides[i].date%></td>
+						<td><%= notBiddedRides[i].numseats%></td>
+						<td>
+							<% if (notBiddedRides[i].status==='open') { %>
+							<button type="submit" class="btn btn-primary" id="noPassenger" name="noPassenger" value="<%= notBiddedRides[i].rid %>">Close
+								Ride</button>
+							<% } else { %>
+								Ride closed
 							<% } %>
-						<% }) %>
-					</tbody>
-				</table>
-		</div>
-		<script>
-			
-		</script>
-  </body>
+						</td>
+					</form>
+				</tr>
+				<% } %>
+			</tbody>
+		</table>
+	</div>
+	<script>
+
+	</script>
+</body>
+
 </html>
