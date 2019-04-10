@@ -22,7 +22,7 @@ var sql_query = 'With tempTable as ' +
 	'Select T.rid, name, source, destination, date, numSeats, maxpt, status, ' +
 	'ROUND((SELECT avg(ratings) FROM Rates R1 where R1.ratedID = T.did and ratings>-1),2) as ratings ' +
 	'FROM tempTable T join Users on Users.nric = T.did join Bids on T.rid=Bids.rid ' +
-	'WHERE Bids.pid = $1 order by T.rid';
+	'WHERE Bids.pid = $1 order by status, date desc';
 var post_query = 'INSERT INTO Bids VALUES($1, $2, $3)';
 var wallet_query = 'SELECT balance from Wallet where Wallet.wid = $1';
 var totalBids_query = 'SELECT sum(points) as totalBid from Bids where Bids.pid=$1';

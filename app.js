@@ -45,6 +45,7 @@ var selectPassengerRouter = require('./routes/selectPassenger');
 var rateRouter = require('./routes/rate');
 var profileRouter = require('./routes/profile');
 var passengerHistoryRouter = require('./routes/passengerHistory');
+var manageRideRouter = require('./routes/manageRide');
 var logoutRouter = require('./routes/logout');
 
 var app = express();
@@ -99,6 +100,7 @@ app.use('/registerAsDriver',regDriverRouter);
 app.use('/rate',rateRouter);
 app.use('/profile',profileRouter);
 app.use('/passengerHistory',passengerHistoryRouter);
+app.use('/manageRide', manageRideRouter);
 app.use('/logout',logoutRouter);
 
 /* ---------------------------- */
