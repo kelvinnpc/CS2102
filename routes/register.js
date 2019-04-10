@@ -42,7 +42,7 @@ router.post('/', function(req, res, next) {
 		if (err)
 			res.redirect('/register?add=fail');
 		else
-			res.redirect('/');
+			res.redirect('/login');
 	});
 
 	
