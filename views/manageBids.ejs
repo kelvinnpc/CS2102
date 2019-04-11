@@ -23,8 +23,8 @@
 				</div>
 
 		<div class="main">
-	  <div style = "background-color: PALEGOLDENROD">Available balance (before deducting existing bids): <%= data1[0].balance %> <br>
-		Available balance (after deducting existing bids): <%= data1[0].balance - data2[0].totalbid %>
+	  <div style = "background-color: PALEGOLDENROD">Available balance (before deducting existing bids): <%= getWalletBalance[0].balance %> <br>
+		Available balance (after deducting existing 'pending' bids): <%= getWalletBalance[0].balance - getTotalBids[0].totalbid %>
 		</div>
 		<h1><%= title%></h1>
 		<p>Enter bid = 0 to retract bid</p>
@@ -45,30 +45,30 @@
 				</tr>
 			</thead>
 			<tbody>
-				<% for(var i=0; i<data.length; i++) { %>
+				<% for(var i=0; i<getBidInfo.length; i++) { %>
 				<tr>
 				<form method="post" action="manageBids">
-					<td><%= data[i].rid%></td>
-					<td><%= data[i].name%></td>
+					<td><%= getBidInfo[i].rid%></td>
+					<td><%= getBidInfo[i].name%></td>
 					<td>
-						<% if (data[i].ratings == -1 || !data[i].ratings) { %>
+						<% if (getBidInfo[i].ratings == -1 || !getBidInfo[i].ratings) { %>
 							no rating 
 						<% } else { %>
-							<%= data[i].ratings%>
+							<%= getBidInfo[i].ratings%>
 						<% } %>
 					</td>
-					<td><%= data[i].source%></td>
-					<td><%= data[i].destination%></td>
-					<td><%= data[i].date%></td>
-					<td><%= data[i].numseats%></td>
-          <td><%= data[i].maxpt%></td>
-          <td><%= data[i].points%></td>
-					<% if (data[i].status==='pending') { %>
+					<td><%= getBidInfo[i].source%></td>
+					<td><%= getBidInfo[i].destination%></td>
+					<td><%= getBidInfo[i].date%></td>
+					<td><%= getBidInfo[i].numseats%></td>
+          <td><%= getBidInfo[i].maxpt%></td>
+          <td><%= getBidInfo[i].points%></td>
+					<% if (getBidInfo[i].status==='pending') { %>
 					<td>
 						<input type="number" class="form-control" id="bid" name="bid" placeholder="Enter your new bid">
-						<button type="submit" class="btn btn-primary" name="rid" value="<%= data[i].rid%>">Update Bid</button>
+						<button type="submit" class="btn btn-primary" name="rid" value="<%= getBidInfo[i].rid%>">Update Bid</button>
 					</td>
-					<% } else if (data[i].status === 'rejected') { %>
+					<% } else if (getBidInfo[i].status === 'rejected') { %>
 						<td>Bid rejected</td>
 					<% } else { %>
 						<td>Ride confirmed</td>

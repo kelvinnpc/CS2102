@@ -1,6 +1,3 @@
-/* --- Global Variables --- */
-var rideID = 0;
-
 var express = require('express');
 var router = express.Router();
 
@@ -12,7 +9,7 @@ const pool = new Pool({
 
 
 /* SQL Query */
-var insert_query = 'INSERT INTO Rides (did,source, destination, numSeats, date) VALUES ($1, $2, $3, $4,$5)';
+var insertRide_query = 'INSERT INTO Rides (did,source, destination, numSeats, date) VALUES ($1, $2, $3, $4,$5)';
 
 router.get('/', advertiseRide);
 router.post('/', postRide);
@@ -23,7 +20,7 @@ function advertiseRide(req,res,next){
 
 function postRide(req,res,next) {
 	console.log(req.body.bid);
-	pool.query(insert_query, [req.user.nric, req.body.source, req.body.destination, req.body.numSeats, req.body.date], (err, data) => {
+	pool.query(insertRide_query, [req.user.nric, req.body.source, req.body.destination, req.body.numSeats, req.body.date], (err, data) => {
 	  console.log(err);
 	  if (err)
 		res.redirect('/advertiseRide?post=fail')
@@ -31,7 +28,7 @@ function postRide(req,res,next) {
 		res.redirect('/advertiseRide?post=success')
   
 	});
-  }
+}
   
   function basic(req, res, page, other) {
 	  var info = {

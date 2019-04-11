@@ -10,10 +10,12 @@ DROP TABLE IF EXISTS Drivers;
 DROP TABLE IF EXISTS Passengers;
 DROP TABLE IF EXISTS Users;
 DROP TRIGGER IF EXISTS rideCheck on Rides;
-DROP TRIGGER IF EXISTS topUpCheck on Uses;
+DROP TRIGGER IF EXISTS transactionUpdate on Uses;
 DROP TRIGGER IF EXISTS updateRideCheck on Rides;
 DROP TRIGGER IF EXISTS insertBidCheck on Bids;
 DROP TRIGGER IF EXISTS newUserInit on Users;
+DROP TRIGGER IF EXISTS topUpCheck on Uses;
+DROP FUNCTION IF EXISTS topUpCheck;
 
 CREATE TABLE Users (
 	name    varchar(255) NOT NULL,
@@ -113,7 +115,7 @@ FOR EACH ROW
 EXECUTE PROCEDURE rideCheck();
 
 
-CREATE OR REPLACE FUNCTION topUpCheck()
+CREATE OR REPLACE FUNCTION transactionUpdate()
 RETURNS trigger AS
 $$
 DECLARE currBalance integer;
@@ -126,11 +128,10 @@ END;
 $$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER topUpCheck
+CREATE TRIGGER transactionUpdate
 AFTER INSERT OR UPDATE ON Uses
 FOR EACH ROW
-when (NEW.transaction > 0)
-EXECUTE PROCEDURE topUpCheck();
+EXECUTE PROCEDURE transactionUpdate();
 
 CREATE OR REPLACE FUNCTION updateRideCheck()
 RETURNS trigger AS

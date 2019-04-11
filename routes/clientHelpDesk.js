@@ -1,17 +1,14 @@
 var express = require('express');
 var router = express.Router();
+const { Pool } = require('pg');
 
-const { Pool } = require('pg')
 const pool = new Pool({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'postgres',
-  password: '********',
-  port: 5432,
-})
+	connectionString: process.env.DATABASE_URL
+});
+
 
 /* SQL Query */
-var insert_query = 'INSERT INTO accessHelpDesk VALUES ($1,$2)';
+var insertHelpDesk_query = 'INSERT INTO accessHelpDesk VALUES ($1,$2)';
 var isDriver_query = 'SELECT count(did) as count from Drivers where $1 = did';
 
 // GET
@@ -28,7 +25,7 @@ router.get('/', function(req, res, next) {
 
 // POST
 router.post('/', function(req, res, next) {
-	pool.query(insert_query, [req.user.nric,req.body.message],(err, data) => {
+	pool.query(insertHelpDesk_query, [req.user.nric,req.body.message],(err, data) => {
 		if (err) {
 			if (req.query.drivermode==='true')
 				res.redirect('/clientHelpDesk?add=fail&drivermode=true')
