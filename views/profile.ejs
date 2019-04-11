@@ -35,16 +35,16 @@
 
   <div class="main">
     <h1><%= title%></h1>
-    <h2>Basic Information</h2>
-    <h3>
+    <h4>Basic Information</h4>
+    <p style="padding-left: 20px">
       Name: <%= data[0].name %><br>
       User Name: <%= data[0].username %><br>
       NRIC: <%= data[0].nric %><br>
       Phone Number: <%= data[0].phonenumber %><br>
       Address: <%= data[0].address %>
-    </h3>
-    <h2>Statistics</h2>
-    <h3>
+    </p>
+    <h4>Statistics</h4>
+    <p style="padding-left: 20px">
       Total trips in the last 30 days : <%= getNumTrips %><br>
       Your average rating in the last 30 days: <% if (getReceivedRating30days >=0) { %> <%= getReceivedRating30days %> <% } else { %> No one has
       rated you in the past 30 days <% } %><br>
@@ -54,7 +54,7 @@
       not rated anyone in the past 30 days <% } %><br>
       Overall rating for drivers : <% if (getGivenRatingAll >=0) { %> <%= getGivenRatingAll %> <% } else { %> You have not rated anyone
       <% } %><br>
-    </h3>
+    </p>
   </div>
 </body>
 
