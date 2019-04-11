@@ -9,6 +9,11 @@ DROP TABLE IF EXISTS Rides;
 DROP TABLE IF EXISTS Drivers;
 DROP TABLE IF EXISTS Passengers;
 DROP TABLE IF EXISTS Users;
+DROP TRIGGER IF EXISTS rideCheck on Rides;
+DROP TRIGGER IF EXISTS topUpCheck on Uses;
+DROP TRIGGER IF EXISTS updateRideCheck on Rides;
+DROP TRIGGER IF EXISTS insertBidCheck on Bids;
+DROP TRIGGER IF EXISTS newUserInit on Users;
 
 CREATE TABLE Users (
 	name    varchar(255) NOT NULL,
@@ -31,7 +36,7 @@ CREATE TABLE Drivers (
 
 CREATE TABLE Rides (
 	rid SERIAL PRIMARY KEY,
-	did varchar(9) references Users (nric),
+	did varchar(9) references Drivers (did),
 	source varchar(255) NOT NULL,
 	destination varchar(255) NOT NULL,
 	numSeats integer,
@@ -48,20 +53,20 @@ CREATE TABLE Rates (
 );
 
 CREATE TABLE Wallet (
-	wid varchar(9) references Passengers (pid),
+	wid varchar(9) references Users (nric),
 	balance int NOT NULL,
 	primary key (wid)
 );
 
 CREATE TABLE Uses (
-	pid varchar(9) references Passengers (pid),
+	pid varchar(9) references Users (nric),
 	transaction integer,
 	date timestamp default current_timestamp,
 	primary key (date, pid)
 );
 
 CREATE TABLE Cars (
-	did varchar(9),
+	did varchar(9) references Drivers (did),
 	platenumber varchar(10),
 	model varchar(255),
 	numSeats int,
@@ -77,16 +82,16 @@ CREATE TABLE Bids (
 );
 
 CREATE TABLE History (
-	userID varchar(9) references Users (nric),
+	userID varchar(9) references Passengers (pid),
 	rid integer references Rides (rid),
 	points integer
 );
 
 create table AccessHelpDesk (
+	msgID SERIAL PRIMARY KEY,
     userID varchar(9) references Users (nric),
     message varchar(1000),
-    date timestamp default current_timestamp,
-    primary key (date)
+    date timestamp default current_timestamp
 );
 
 CREATE OR REPLACE FUNCTION rideCheck()
@@ -103,7 +108,7 @@ $$
 LANGUAGE plpgsql;
 
 CREATE TRIGGER rideCheck
-BEFORE INSERT OR UPDATE ON Rides
+BEFORE INSERT ON Rides
 FOR EACH ROW
 EXECUTE PROCEDURE rideCheck();
 
@@ -199,55 +204,81 @@ AFTER INSERT ON Users
 FOR EACH ROW
 EXECUTE PROCEDURE newUserInit();
 
---Insert into Users
-INSERT INTO Users (name, username, password, nric, phonenumber, address)
-VALUES ('Leslie Cole', 'LeslieCole', '$2b$10$qISl6Wshq80lkZrT2U0EreIF18Eh4kc76QzATG91Rl.PE0oey0CdG', 'S0000001A', '12345678', 'Kent Ridge');
+/* Insert into Users */
+INSERT INTO Users (name, username, password, nric, phonenumber, address) VALUES 
+('Leslie Cole', 'LeslieCole', '$2b$10$qISl6Wshq80lkZrT2U0EreIF18Eh4kc76QzATG91Rl.PE0oey0CdG', 'S0000001A', '12345678', 'Kent Ridge'),
+('Myra Morgan', 'MyraMorgan', '$2b$10$qISl6Wshq80lkZrT2U0EreIF18Eh4kc76QzATG91Rl.PE0oey0CdG','S0000002B', '12345677', 'Kent Ridge'),
+('Raymond Benson', 'RaymondBenson', '$2b$10$qISl6Wshq80lkZrT2U0EreIF18Eh4kc76QzATG91Rl.PE0oey0CdG', 'S0000003C', '12345676', 'Kent Ridge'),
+('Wendy Kelley', 'WendyKelley', '$2b$10$qISl6Wshq80lkZrT2U0EreIF18Eh4kc76QzATG91Rl.PE0oey0CdG', 'S0000004D', '12345675', 'Kent Ridge'),
+('Patrick Bowers', 'PatrickBowers', '$2b$10$qISl6Wshq80lkZrT2U0EreIF18Eh4kc76QzATG91Rl.PE0oey0CdG', 'S0000005E', '12345674', 'Kent Ridge'),
+('Ralph Hogan', 'RalphHogan', '$2b$10$qISl6Wshq80lkZrT2U0EreIF18Eh4kc76QzATG91Rl.PE0oey0CdG', 'S0000006F', '12345673', 'Kent Ridge'),
+('Cecil Rodriquez', 'CecilRodriquez', '$2b$10$qISl6Wshq80lkZrT2U0EreIF18Eh4kc76QzATG91Rl.PE0oey0CdG', 'S0000007G', '12345672', 'Kent Ridge'),
+('Delia Ferguson', 'DeliaFerguson', '$2b$10$qISl6Wshq80lkZrT2U0EreIF18Eh4kc76QzATG91Rl.PE0oey0CdG', 'S0000008H', '12345671', 'Kent Ridge'),
+('Frances Wright', 'FrancesWright', '$2b$10$qISl6Wshq80lkZrT2U0EreIF18Eh4kc76QzATG91Rl.PE0oey0CdG', 'S0000009I', '12345670', 'Kent Ridge'),
+('Alyssa Sims', 'AlyssaSims', '$2b$10$qISl6Wshq80lkZrT2U0EreIF18Eh4kc76QzATG91Rl.PE0oey0CdG', 'S0000010J', '12345681', 'Kent Ridge');
 
-INSERT INTO Users (name, username, password, nric, phonenumber, address)
-VALUES ('Myra Morgan', 'MyraMorgan', '$2b$10$qISl6Wshq80lkZrT2U0EreIF18Eh4kc76QzATG91Rl.PE0oey0CdG','S0000002B', '12345677', 'Kent Ridge');
-
-INSERT INTO Users (name, username, password, nric, phonenumber, address)
-VALUES ('Raymond Benson', 'RaymondBenson', '$2b$10$qISl6Wshq80lkZrT2U0EreIF18Eh4kc76QzATG91Rl.PE0oey0CdG', 'S0000003C', '12345676', 'Kent Ridge');
-
-INSERT INTO Users (name, username, password, nric, phonenumber, address)
-VALUES ('Wendy Kelley', 'WendyKelley', '$2b$10$qISl6Wshq80lkZrT2U0EreIF18Eh4kc76QzATG91Rl.PE0oey0CdG', 'S0000004D', '12345675', 'Kent Ridge');
-
-INSERT INTO Users (name, username, password, nric, phonenumber, address)
-VALUES ('Patrick Bowers', 'PatrickBowers', '$2b$10$qISl6Wshq80lkZrT2U0EreIF18Eh4kc76QzATG91Rl.PE0oey0CdG', 'S0000005E', '12345674', 'Kent Ridge');
-
-INSERT INTO Users (name, username, password, nric, phonenumber, address)
-VALUES ('Ralph Hogan', 'RalphHogan', '$2b$10$qISl6Wshq80lkZrT2U0EreIF18Eh4kc76QzATG91Rl.PE0oey0CdG', 'S0000006F', '12345673', 'Kent Ridge');
-
-INSERT INTO Users (name, username, password, nric, phonenumber, address)
-VALUES ('Cecil Rodriquez', 'CecilRodriquez', '$2b$10$qISl6Wshq80lkZrT2U0EreIF18Eh4kc76QzATG91Rl.PE0oey0CdG', 'S0000007G', '12345672', 'Kent Ridge');
-
-INSERT INTO Users (name, username, password, nric, phonenumber, address)
-VALUES ('Delia Ferguson', 'DeliaFerguson', '$2b$10$qISl6Wshq80lkZrT2U0EreIF18Eh4kc76QzATG91Rl.PE0oey0CdG', 'S0000008H', '12345671', 'Kent Ridge');
-
-INSERT INTO Users (name, username, password, nric, phonenumber, address)
-VALUES ('Frances Wright', 'FrancesWright', '$2b$10$qISl6Wshq80lkZrT2U0EreIF18Eh4kc76QzATG91Rl.PE0oey0CdG', 'S0000009I', '12345670', 'Kent Ridge');
-
-INSERT INTO Users (name, username, password, nric, phonenumber, address)
-VALUES ('Alyssa Sims', 'AlyssaSims', '$2b$10$qISl6Wshq80lkZrT2U0EreIF18Eh4kc76QzATG91Rl.PE0oey0CdG', 'S0000010J', '12345681', 'Kent Ridge');
---Insert into Drivers
+/* Insert into Drivers */
 INSERT INTO Drivers (did) VALUES 
-('S0000001A'),
-('S0000004D');
+('S0000001A'),('S0000002B'),('S0000003C'),('S0000004D'),('S0000005E');
 
---Insert into Rides
+/* Insert into Cars */
+INSERT INTO Cars (did,platenumber,model,numSeats) VALUES
+('S0000001A','E13','model1',4),('S0000002B','B20','model1',4),('S0000003C','C11','model1',4),
+('S0000004D','D31','model1',4),('S0000005E','E121','model1',4);
+
+/* Insert into Rides */
 INSERT INTO Rides (did, source, destination, numSeats,date) VALUES
-('S0000001A', 'Kent Ridge', 'Buona',1,'2019/04/02 16:04'),
-('S0000001A', 'Buona', 'Kent Ridge',2, '2019/05/12 16:04'),
-('S0000004D', 'Kent Ridge', 'Buona',3,'2019/03/22 16:04');
+('S0000001A', 'Kent Ridge', 'Buona',4,'2020/08/02 16:00'),
+('S0000001A', 'Buona', 'Kent Ridge',2, '2020/07/12 12:00'),
+('S0000002B', 'Toa Payoh', 'Pasir Ris',3,'2020/12/12 09:00'),
+('S0000002B', 'Pasir Ris', 'Toa Payoh',2,'2020/02/16 12:00'),
+('S0000003C', 'Paya Lebar', 'Macpherson',1,'2020/03/22 16:00'),
+('S0000003C', 'Macpherson', 'Paya Lebar',2,'2020/09/27 13:00'),
+('S0000004D', 'Jurong East', 'Seng Kang',3,'2020/11/02 16:00'),
+('S0000004D', 'Seng Kang', 'Jurong East',1,'2020/02/13 18:00'),
+('S0000005E', 'Somerset', 'Raffles Place',1,'2020/08/09 20:00'),
+('S0000005E', 'Raffles Place', 'Somerset',2,'2020/06/19 22:00');
 
-INSERT INTO Uses(pid,transaction) VALUES ('S0000002B',500), ('S0000001A',500),('S0000004D',500);
-INSERT INTO BIDS(pid,rid,points) VALUES ('S0000002B',1,100);
-INSERT INTO BIDS(pid,rid,points) VALUES ('S0000002B',1,150);
-INSERT INTO BIDS(pid,rid,points) VALUES ('S0000001A',4,1),('S0000002B',4,2),('S0000004D',4,3),
-('S0000001A',6,1),('S0000002B',6,2),('S0000004D',6,3),('S0000001A',5,1),('S0000002B',5,2),('S0000004D',5,3);
+INSERT INTO Rides (rid,did, source, destination, numSeats, status, date) VALUES
+(11,'S0000001A', 'Yishun', 'Yew Tee',4, 'close', '2019/01/02 16:00'),
+(12,'S0000001A', 'Yew Tee', 'Yishun',4, 'close', '2019/03/02 12:00');
+
+INSERT INTO Uses(pid,transaction) VALUES 
+('S0000001A',1000), ('S0000002B',500), ('S0000003C',500), ('S0000004D',500), ('S0000005E',500),('S0000006F',100),
+('S0000007G',500), ('S0000008H',500), ('S0000009I',500), ('S0000010J',500);
 
 
-Select * from bids;
+INSERT INTO BIDS(pid,rid,points) VALUES
+('S0000007G',1,10), ('S0000008H',1,20), ('S0000009I',1,5),('S0000002B',2,1),('S0000003C',2,3),('S0000004D',2,10),
+('S0000005E',2,20),('S0000002B',2,1),('S0000007G',3,20),('S0000009I',3,12),('S0000010J',3,2),('S0000004D',4,3),
+('S0000004D',4,3),('S0000003C',4,11),('S0000010J',5,9),('S0000009I',5,18),('S0000002B',5,3),('S0000007G',5,10),
+('S0000010J',6,5),('S0000009I',6,3),('S0000008H',6,14),('S0000002B',7,16),('S0000009I',7,15),('S0000003C',8,8),
+('S0000005E',8,2),('S0000008H',8,9),('S0000002B',9,9),('S0000003C',10,4),('S0000002B',10,19),('S0000001A',10,20),
+('S0000001A',7,2),('S0000006F',3,20),('S0000006F',1,11);
+
+
+INSERT INTO BIDS(pid,rid,points,status) VALUES
+('S0000006F',11,9,'Ride Confirmed'), ('S0000006F',12,1,'rejected');
+
+UPDATE BIDS SET points=0 WHERE pid='S0000006F' and rid=12;
+
+INSERT INTO Rates(raterid,ratedid,ratings,rid) VALUES 
+('S0000006F','S0000001A',-1,11),('S0000001A','S0000006F',-1,11);
+
+INSERT INTO Rides (rid, did, source, destination, numSeats, status, date) VALUES
+(100,'S0000002B', 'Clementi', 'Tuas',4, 'close', '2019/02/02 16:00');
+
+INSERT INTO History(userID,rid,points) VALUES 
+('S0000006F',11,10),('S0000001A',100,1);
+
+INSERT INTO Uses(pid,transaction) VALUES
+('S0000006F',-10),('S0000001A',10);
+
+INSERT INTO Uses(pid,transaction,date) VALUES
+('S0000001A',9,'2019/03/16 16:00'),('S0000001A',5,'2019/03/23 16:00'),('S0000001A',3,'2019/03/01 16:00'),
+('S0000001A',-10,'2019/03/07 12:00'),('S0000001A',-1,'2019/03/02 12:00'),('S0000001A',-2,'2019/03/02 16:00'),
+('S0000001A',10,'2019/04/02 16:00'),('S0000001A',10,'2019/04/12 16:00'),('S0000001A',10,'2019/04/01 16:00'),
+('S0000001A',-102,'2019/02/02 16:00'),('S0000001A',-12,'2019/02/12 16:00'),('S0000001A',-1,'2019/02/01 16:00');
 
 /* complicated query */
 select coalesce(sum(case when transaction >= 0 then transaction end),0) as topUp,
