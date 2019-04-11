@@ -280,9 +280,3 @@ INSERT INTO Uses(pid,transaction,date) VALUES
 ('S0000001A',-10,'2019/03/07 12:00'),('S0000001A',-1,'2019/03/02 12:00'),('S0000001A',-2,'2019/03/02 16:00'),
 ('S0000001A',10,'2019/04/02 16:00'),('S0000001A',10,'2019/04/12 16:00'),('S0000001A',10,'2019/04/01 16:00'),
 ('S0000001A',-102,'2019/02/02 16:00'),('S0000001A',-12,'2019/02/12 16:00'),('S0000001A',-1,'2019/02/01 16:00');
-
-/* complicated query */
-select coalesce(sum(case when transaction >= 0 then transaction end),0) as topUp,
-						coalesce(sum(case when transaction < 0 then transaction end),0) as deducted, 
-						to_char(date, 'YYYY-MM') as year_month from uses where 's7654321z' = uses.pid group by year_month order by year_month;
-

@@ -1,8 +1,5 @@
 function check(event) {
-	// Get Values
-	// var matric  = document.getElementById('matric' ).value;
-	// var name    = document.getElementById('name'   ).value;
-	// var faculty = document.getElementById('faculty').value;
+
 	var name  = document.getElementById('name' ).value;
 	var username  = document.getElementById('username' ).value;
 	var password  = document.getElementById('password' ).value;
@@ -10,7 +7,7 @@ function check(event) {
 	var phonenumber  = document.getElementById('phonenumber').value;
 	var address = document.getElementById('address').value;
 
-	// Simple Check
+	// Check
 	if(name.length == 0) {
 		alert("Invalid name");
 		event.preventDefault();

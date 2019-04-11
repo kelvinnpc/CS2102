@@ -12,7 +12,8 @@ const salt  = bcrypt.genSaltSync(round);
 
 /* SQL Query */
 var insertUser_query = 'INSERT INTO Users VALUES ($1, $2, $3, $4, $5, $6)';
-
+var checkValidUserName_query = 'SELECT count(nric) as count from Users where username=$1';
+var checkValidNric_query = 'SELECT count(nric) as count from Users where nric=$1'
 // GET
 router.get('/', function(req, res, next) {
 	res.render('register', { title: 'Modifying Database' });
@@ -30,10 +31,22 @@ router.post('/', function(req, res, next) {
 
 	
 	pool.query(insertUser_query, [name, username, password, nric, phonenumber, address], (err, data) => {
-		if (err)
-			res.redirect('/register?add=fail');
+		if (err) {
+			pool.query(checkValidUserName_query, [username], (err,checkValidUserName) => {
+				if (checkValidUserName.rows[0].count==1)
+					res.redirect('/register?register=fail/username_taken')
+				else {
+					pool.query(checkValidNric_query, [nric], (err,checkValidNric) => {
+						if (checkValidNric.rows[0].count==1)
+							res.redirect('/register?register=fail/NRIC_is_already_registered')
+						else
+							res.redirect('/register?register=fail')
+					});
+				}
+			});
+		}
 		else
-			res.redirect('/login');
+			res.redirect('/login?register=success');
 	});
 
 	

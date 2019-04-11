@@ -16,7 +16,6 @@ require('dotenv').config();
 /* --- For before login pages -----*/
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var aboutRouter = require('./routes/about');
 var registerRouter = require('./routes/register');
 var loginRouter = require('./routes/login');
 /* ------------------------------- */
@@ -74,7 +73,6 @@ app.use(passport.session())
 /* --- For before login pages -----*/
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/about', aboutRouter);
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
