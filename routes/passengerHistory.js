@@ -1,15 +1,7 @@
 var express = require('express');
 var router = express.Router();
-const { Pool } = require('pg')
-/* --- V7: Using Dot Env ---
-const pool = new Pool({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'postgres',
-  password: '********',
-  port: 5432,
-})
-*/
+const { Pool } = require('pg');
+
 const pool = new Pool({
 	connectionString: process.env.DATABASE_URL
 });
@@ -21,7 +13,6 @@ var sql_query = 'SELECT H.rid, U.name, R.source, R.destination, R.date, H.points
 var isDriver_query = 'SELECT count(did) as count from Drivers where $1 = did';
 
 router.get('/', findHistory);
-//router.post('/', bid);
 
 function findHistory(req, res, next) {
 	pool.query(sql_query, [req.user.nric], (err, data) => {

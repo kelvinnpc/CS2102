@@ -34,7 +34,7 @@
 	</div>
 
 	<div class="main">
-		<% if (data===undefined || data.length==0) { %>
+		<% if (getPendingRate===undefined || getPendingRate.length==0) { %>
 			<h1>No users to rate</h1>
 		<% } else { %>
 		<h1>You have completed a ride!</h1>
@@ -52,23 +52,23 @@
 				</tr>
 			</thead>
 			<tbody>
-				<% for(var i=0; i<data.length; i++) { %>
+				<% for(var i=0; i<getPendingRate.length; i++) { %>
 				<tr>
 					<% if (drivermode) { %>
 						<form method="post" action="rate?drivermode=true">
 					<% } else { %>
 						<form method="post" action="rate">
 					<% } %>
-						<td><%= data[i].name%></td>
-						<td><%= data[i].source%></td>
-						<td><%= data[i].destination%></td>
-						<td><%= data[i].date%></td>
+						<td><%= getPendingRate[i].name%></td>
+						<td><%= getPendingRate[i].source%></td>
+						<td><%= getPendingRate[i].destination%></td>
+						<td><%= getPendingRate[i].date%></td>
 
 						<td>
 							<input type="number" class="form-control" id="rating" name="rating" min="0" max="5" required="true"
 								placeholder="Enter your rating">
 							<button type="submit" class="btn btn-primary" id="rid" name="rid"
-								value="<%= data[i].ratedid %>; <%= data[i].rid %>">Submit</button>
+								value="<%= getPendingRate[i].ratedid %>; <%= getPendingRate[i].rid %>">Submit</button>
 						</td>
 					</form>
 				</tr>

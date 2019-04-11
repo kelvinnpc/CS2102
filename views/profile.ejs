@@ -45,14 +45,14 @@
     </h3>
     <h2>Statistics</h2>
     <h3>
-      Total trips in the last 30 days : <%= count %><br>
-      Your average rating in the last 30 days: <% if (passenger30 >=0) { %> <%= passenger30 %> <% } else { %> No one has
+      Total trips in the last 30 days : <%= getNumTrips %><br>
+      Your average rating in the last 30 days: <% if (getReceivedRating30days >=0) { %> <%= getReceivedRating30days %> <% } else { %> No one has
       rated you in the past 30 days <% } %><br>
-      Your overall rating : <% if (passengerall >=0) { %> <%= passengerall %> <% } else { %> No one has rated you
+      Your overall rating : <% if (getReceivedRatingAll >=0) { %> <%= getReceivedRatingAll %> <% } else { %> No one has rated you
       <% } %><br>
-      Average rating for drivers in the last 30 days: <% if (driver30 >=0) { %> <%= driver30 %> <% } else { %> You have
+      Average rating for drivers in the last 30 days: <% if (getGivenRating30days >=0) { %> <%= getGivenRating30days %> <% } else { %> You have
       not rated anyone in the past 30 days <% } %><br>
-      Overall rating for drivers : <% if (driverall >=0) { %> <%= driverall %> <% } else { %> You have not rated anyone
+      Overall rating for drivers : <% if (getGivenRatingAll >=0) { %> <%= getGivenRatingAll %> <% } else { %> You have not rated anyone
       <% } %><br>
     </h3>
   </div>

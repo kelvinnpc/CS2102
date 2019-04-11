@@ -16,7 +16,7 @@ const pool = new Pool({
 
 
 /* SQL Query */
-var select_query = 'With tempTable as ' +
+var getPassengerBids_query = 'With tempTable as ' +
 					'(SELECT Rides.rid, Rides.did, source, destination, date, numSeats, coalesce(max(points),0) as maxpt ' +
 					'FROM Rides left join Bids on Rides.rid = Bids.rid group by Rides.rid) ' +
 					'Select Bids.pid, tempTable.rid, Users.name, source, destination, date, numSeats, Bids.points, maxpt, ' +
@@ -26,8 +26,8 @@ var select_query = 'With tempTable as ' +
 					'and now()<date';
 var updateBidStatus_query = `update Bids set status='Ride Confirmed' where pid=$1 and rid=$2`;
 var updateNumSeats_query = 'UPDATE Rides set numSeats = numSeats - 1 where rid=$1';
-var ratePassenger_query =	'INSERT INTO Rates(raterid,ratedid,ratings,rid) VALUES ($1,$2,-1,$3)';
-var rateDriver_query = 'INSERT INTO Rates(raterid,ratedid,ratings,rid) VALUES ($2,$1,-1,$3)';
+var insertRatePassenger_query =	'INSERT INTO Rates(raterid,ratedid,ratings,rid) VALUES ($1,$2,-1,$3)';
+var insertRateDriver_query = 'INSERT INTO Rates(raterid,ratedid,ratings,rid) VALUES ($2,$1,-1,$3)';
 var insertRideHistory_query = 'INSERT INTO History(userID,rid,points) VALUES ($1,$2,$3)';
 
 router.get('/', selectPassenger);
@@ -35,9 +35,9 @@ router.post('/', select);
 
 function selectPassenger(req,res,next){
 	pool.connect(function(err,client,done) {
-		client.query(select_query,[req.user.nric], function(err,res2) {
+		client.query(getPassengerBids_query,[req.user.nric], function(err, getPassengerBids) {
 			done();
-			basic(req,res,'selectPassenger', {title: 'Select passenger', data: res2.rows});
+			basic(req,res,'selectPassenger', {title: 'Select passenger', getPassengerBids: getPassengerBids.rows});
 		});
 	});
 }
@@ -61,9 +61,9 @@ function select(req, res, next) {
 				if (abort(err)) { return; }
 				client.query(updateNumSeats_query, [req.body.val.split('; ')[0]], function (err, res3) {
 					if (abort(err)) { return; }
-					client.query(ratePassenger_query, [req.user.nric, req.body.val.split('; ')[7], req.body.val.split('; ')[0]], function (err, res7) {
+					client.query(insertRatePassenger_query, [req.user.nric, req.body.val.split('; ')[7], req.body.val.split('; ')[0]], function (err, res7) {
 						if (abort(err)) { return; }
-						client.query(rateDriver_query, [req.user.nric, req.body.val.split('; ')[7], req.body.val.split('; ')[0]], function (err, res8) {
+						client.query(insertRateDriver_query, [req.user.nric, req.body.val.split('; ')[7], req.body.val.split('; ')[0]], function (err, res8) {
 							if (abort(err)) { return; }
 							client.query(insertRideHistory_query, [req.body.val.split('; ')[7], req.body.val.split('; ')[0], req.body.val.split('; ')[6]], function (err, res9) {
 								if (abort(err)) { return; }

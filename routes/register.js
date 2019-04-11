@@ -11,7 +11,7 @@ const round = 10;
 const salt  = bcrypt.genSaltSync(round);
 
 /* SQL Query */
-var sql_query = 'INSERT INTO Users VALUES ($1, $2, $3, $4, $5, $6)';
+var insertUser_query = 'INSERT INTO Users VALUES ($1, $2, $3, $4, $5, $6)';
 
 // GET
 router.get('/', function(req, res, next) {
@@ -27,18 +27,9 @@ router.post('/', function(req, res, next) {
 	var nric = req.body.nric;
 	var phonenumber = req.body.phonenumber;
 	var address = req.body.address;
+
 	
-	// Construct Specific SQL Query
-	// var insert_query = sql_query + "('" 
-	// 					+ name + "','" 
-	// 					+ username + "','" 
-	// 					+ password + "','"
-	// 					+ nric + "','" 
-	// 					+ phonenumber + "','"
-	// 					+ address
-	// 					+ "')";
-	
-	pool.query(sql_query, [name, username, password, nric, phonenumber, address], (err, data) => {
+	pool.query(insertUser_query, [name, username, password, nric, phonenumber, address], (err, data) => {
 		if (err)
 			res.redirect('/register?add=fail');
 		else

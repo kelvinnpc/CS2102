@@ -11,8 +11,8 @@ const round = 10;
 const salt  = bcrypt.genSaltSync(round);
 
 /* SQL Query */
-var driver_query = 'INSERT INTO Drivers(did) VALUES ($1)';
-var car_query = 'INSERT INTO Cars(did,platenumber,model,numSeats) VALUES ($1,$2,$3,$4)';
+var insertDriver_query = 'INSERT INTO Drivers(did) VALUES ($1)';
+var insertCar_query = 'INSERT INTO Cars(did,platenumber,model,numSeats) VALUES ($1,$2,$3,$4)';
 
 // GET
 router.get('/', function(req, res, next) {
@@ -23,8 +23,8 @@ router.post('/', register);
 
 function register(req,res,next) {
   console.log(req.body.bid);
-  pool.query(driver_query, [req.user.nric], (err, data) => {
-    pool.query(car_query, [req.user.nric, req.body.plateNumber, req.body.model, req.body.numSeats], (err1, data1) => {
+  pool.query(insertDriver_query, [req.user.nric], (err, data) => {
+    pool.query(insertCar_query, [req.user.nric, req.body.plateNumber, req.body.model, req.body.numSeats], (err1, data1) => {
         console.log(err);
         if (err)
             res.redirect('/registerAsDriver?reg=fail')
