@@ -100,6 +100,22 @@ input[type="radio"] {
   border: 1px solid red;
 }
 
+.balanceSummary {
+  display:flex;
+  flex-direction: column;
+  background-color: rgb(232, 240, 241);
+  border-radius: 15px;
+}
+
+.balanceSummary p{
+  padding: 5px;
+}
+
+.searchForm {
+  background-color: rgb(232, 240, 241);
+  padding: 10px;
+  border-radius: 15px;
+}
 .sortingFieldsContainer {
   display:flex;
   flex-direction:column;
