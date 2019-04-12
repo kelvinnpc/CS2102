@@ -17,10 +17,6 @@ body {
   padding: 0px;
 }
 
-a {
-  color: #00B7FF;
-}
-
 .topnav {
   overflow:hidden;
   background-color: #333;
@@ -92,4 +88,9 @@ border-radius: 5px;
   width: 100%;
   height: calc(100vh - 109px);
   display: flex;
+}
+
+#rating{
+  width:117%;
+  /* border: 1px solid red; */
 }
