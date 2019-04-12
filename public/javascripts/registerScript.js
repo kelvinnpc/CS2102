@@ -21,7 +21,7 @@ function check(event) {
 		return false;
 	}
 	if(password.length == 0) {
-		alert("Invalid faculty code");
+		alert("Invalid password");
 		event.preventDefault();
 		event.stopPropagation();
 		return false;
