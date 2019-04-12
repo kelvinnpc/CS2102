@@ -1,19 +1,17 @@
-README of Car Pooling Application
-
---Installation--
-Install the following tools
+## Installation
+#### Install the following tools
 1. postgresql
 2. node
 
-After installing the tools,
+## After installing the tools:
 1. Open terminal and switch to the directory the application is in
 2. Run "npm install" to install the relevant node modules
 3. Create a .env file
-	3.1 Enter into the .env file "DATABASE URL=postgres://<username>:<password>@<host address>:<port>/<database name>"
-		Replace the values in <> according to your PostgreSQL configuration
+4. Enter into the .env file`DATABASE URL=postgres://<username>:<password>@<host address>:<port>/<database name>` 
+   Replace the values in <> according to your PostgreSQL configuration.
 
 
---How to deploy Application--
+## How to deploy Application?
 1. Open terminal and switch to the directory the application is in
 2. Enter "psql -U <username>" where <username> is your username in PostgreSQL
 3. Enter "\i postgresql_script.sql" to initiate the database
