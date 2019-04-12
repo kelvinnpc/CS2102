@@ -96,5 +96,26 @@ border-radius: 5px;
 }
 
 input[type="radio"] {
-  margin-left: 20px;
+  margin-right: 5px;
+  border: 1px solid red;
 }
+
+.sortingFieldsContainer {
+  display:flex;
+  flex-direction:column;
+  /* border: 1px solid black;   */
+}
+
+.sortingFieldsContainer .sortingField {
+  display:flex;
+  flex-direction: row;
+  padding-bottom: 10px;
+  /* border:1px solid red; */
+}
+.sortingFieldsContainer .sortingField div {
+  display: inline-block;
+  flex-direction: row;
+  width: 300px;
+  /* border:1px solid blue; */
+  padding-left: 20px;
+} 
