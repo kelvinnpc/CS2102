@@ -93,3 +93,7 @@ border-radius: 5px;
   height: calc(100vh - 109px);
   display: flex;
 }
+
+input[type="radio"] {
+  margin-left: 20px;
+}

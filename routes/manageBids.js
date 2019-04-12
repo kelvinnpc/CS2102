@@ -41,15 +41,40 @@ function manageBids(req, res, next) {
 }
 
 function bid(req, res, next) {
-	console.log(req.body.bid);
-	pool.query(insertBid_query, [req.user.nric, req.body.rid, req.body.bid], (err, data) => {
-		console.log(err);
-		if (err)
-			res.redirect('/manageBids?update=fail')
-		else
-			res.redirect('/manageBids?update=success')
+	var getBidInfo_query = 'With tempTable as ' +
+	'(SELECT Rides.rid, Rides.did, source, destination, date, numSeats, coalesce(max(points),0) as maxpt ' +
+	'FROM Rides left join Bids on Rides.rid = Bids.rid group by Rides.rid) ' +
+	'Select T.rid, name, source, destination, date, numSeats, maxpt, status, Bids.points, ' +
+	'ROUND((SELECT avg(ratings) FROM Rates R1 where R1.ratedID = T.did and ratings>-1),2) as ratings ' +
+	'FROM tempTable T join Users on Users.nric = T.did join Bids on T.rid=Bids.rid ' +
+	'WHERE Bids.pid = $1 and lower(source) LIKE $2 and lower(destination) LIKE $3';
+	if (req.query.search==='true') {
+		var source= "%" + req.body.source.toLowerCase() + "%";
+		var destination = "%" + req.body.destination.toLowerCase() + "%";
+		pool.query(getBidInfo_query, [req.user.nric, source,destination], (err, getBidInfo) => {
+			pool.query(getWalletBalance_query, [req.user.nric], (err1, getWalletBalance) => {
+				pool.query(getTotalBids_query, [req.user.nric], (err1, getTotalBids) => {
+					pool.query(isDriver_query, [req.user.nric], (err3, driverCheck) => {
+						if (err)
+							res.redirect('/manageBids?search=fail')
+						else if (driverCheck.rows[0].count == 0)
+							basic(req, res, 'manageBids', { title: 'My bids', driver: false, getBidInfo: getBidInfo.rows, getWalletBalance: getWalletBalance.rows, getTotalBids: getTotalBids.rows});
+						else
+							basic(req, res, 'manageBids', { title: 'My bids', driver: true, getBidInfo: getBidInfo.rows, getWalletBalance: getWalletBalance.rows, getTotalBids: getTotalBids.rows});
+					});
+				});
+			});
+		});
+	} else {
+		pool.query(insertBid_query, [req.user.nric, req.body.rid, req.body.bid], (err, data) => {
+			console.log(err);
+			if (err)
+				res.redirect('/manageBids?update=fail')
+			else
+				res.redirect('/manageBids?update=success')
 
-	});
+		});
+	}
 }
 
 function basic(req, res, page, other) {

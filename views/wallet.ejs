@@ -45,6 +45,18 @@
 			<button type="submit" class="btn btn-primary">Top Up</button>
 		</form>
 		<br>
+		<% if (drivermode) { %>
+			<form id="html_form" action="wallet?drivermode=true&search=true" role="form" method="post">
+		<% } else { %>
+			<form id="html_form" action="wallet?search=true" role="form" method="post">
+		<% } %>				
+		<div class="form-group">
+					<label style="padding-top: 5px" for="date">Search date</label>
+					<input type="text" class="form-control" id="date" name="date" placeholder="Enter YYYY-MM here">
+				</div>
+				<button type="submit" class="btn btn-primary">Search</button>
+		</form>
+		<br>
 		<h2>Transactions summary by month</h2>
 		<table class="table">
 				<thead>

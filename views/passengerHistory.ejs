@@ -23,7 +23,22 @@
 		</div>
 
 		<div class="main">
-    <h1><%= title%></h1>
+		<h1><%= title%></h1>		
+
+		<form method="post" action="passengerHistory?search=true">
+				<div class="form-group">
+					<label style="padding-top: 5px" for="rid">Search ride ID</label>
+					<input type="number" class="form-control" id="rid" name="rid" placeholder="Enter ride ID here" min="1">
+					<label style="padding-top: 5px" for="name">Search driver name</label>
+					<input type="text" class="form-control" id="name" name="name" placeholder="Enter driver name here">
+					<label style="padding-top: 5px" for="source">Search source</label>
+					<input type="text" class="form-control" id="source" name="source" placeholder="Enter source here">
+					<label style="padding-top: 5px" for="destination">Search destination</label>
+					<input type="text" class="form-control" id="destination" name="destination" placeholder="Enter destination here">
+				</div>
+				<button type="submit" class="btn btn-primary">Search</button>
+		</form>
+		<br>
 		<table class="table">
 			<thead>
 				<tr>
