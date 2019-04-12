@@ -7,7 +7,7 @@
 1. Open terminal and switch to the directory the application is in
 2. Run "npm install" to install the relevant node modules
 3. Create a .env file
-4. Enter into the .env file "DATABASE URL=postgres://<username>:<password>@<host address>:<port>/<database name>". 
+4. Enter into the .env file`DATABASE URL=postgres://<username>:<password>@<host address>:<port>/<database name>` 
    Replace the values in <> according to your PostgreSQL configuration.
 
 
