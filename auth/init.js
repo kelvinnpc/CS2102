@@ -1,11 +1,6 @@
-const sql_query = require('../sql');
-
 const passport = require('passport');
 const bcrypt = require('bcrypt');
 const LocalStrategy = require('passport-local').Strategy;
-
-// const authMiddleware = require('./middleware');
-// const antiMiddleware = require('./antimiddle');
 
 // Postgre SQL Connection
 const { Pool } = require('pg');
@@ -13,9 +8,10 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   //ssl: true
 });
+var userpass_query = 'SELECT * FROM users WHERE username=$1';
 
 function findUser (username, callback) {
-	pool.query(sql_query.query.userpass, [username], (err, data) => {
+	pool.query(userpass_query, [username], (err, data) => {
 		if(err) {
 			console.error("Cannot find user");
 			return callback(null);
@@ -76,8 +72,6 @@ function initPassport () {
     }
   ));
 console.log("initPassport");
-  // passport.authMiddleware = authMiddleware;
-  // passport.antiMiddleware = antiMiddleware;
 	passport.findUser = findUser;
 }
 
