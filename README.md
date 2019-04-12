@@ -1,3 +1,5 @@
+# CS2102: Car Pooling
+
 ## Installation
 #### Install the following tools
 1. postgresql
