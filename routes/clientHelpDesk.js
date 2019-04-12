@@ -8,7 +8,7 @@ const pool = new Pool({
 
 
 /* SQL Query */
-var insertHelpDesk_query = 'INSERT INTO accessHelpDesk VALUES ($1,$2)';
+var insertHelpDesk_query = 'INSERT INTO accessHelpDesk(userID, message) VALUES ($1,$2)';
 var isDriver_query = 'SELECT count(did) as count from Drivers where $1 = did';
 
 // GET
