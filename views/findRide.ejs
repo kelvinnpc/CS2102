@@ -29,6 +29,28 @@
 		<h1><%= title%></h1>
 		<p>Sorted by departing time</p>
 		<p>Note: You cannot bid more than the available balance (after deducting existing 'pending' bids)</p>
+		<form method="post" action="findRide?search=true">
+				<div class="form-group">
+					<label style="padding-top: 5px" for="source">Search source</label>
+					<input type="text" class="form-control" id="source" name="source" placeholder="Enter source here">
+					<label style="padding-top: 5px" for="destination">Search destination</label>
+					<input type="text" class="form-control" id="destination" name="destination" placeholder="Enter destination here">
+				</div>
+				<div class="form-group">
+						<label>Sort by: </label>
+						<fieldset id="time">
+							<input type="radio"  value="0; date" name="time" <%= checked[0] %>>Show nearest depart time first
+							<input type="radio"  value="1; date desc" name="time" <%= checked[1] %>>Show furthest depart time last
+						</fieldset>
+						<p style="margin-left: 20px">if tie</p>
+						<fieldset id="bids">
+							<input type="radio" value="2; maxpt" name="bids" <%= checked[2] %>>Show lowest bids first
+							<input type="radio" value="3; maxpt desc" name="bids" <%= checked[3] %>>Show highest bids first
+						</fieldset>
+				</div>
+				<button type="submit" class="btn btn-primary">Search</button>
+		</form>
+		<br>
 		<table class="table">
 			<thead>
 				<tr>

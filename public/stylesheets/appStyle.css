@@ -94,3 +94,7 @@ border-radius: 5px;
   width:117%;
   /* border: 1px solid red; */
 }
+
+input[type="radio"] {
+  margin-left: 20px;
+}
