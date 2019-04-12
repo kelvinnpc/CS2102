@@ -37,22 +37,48 @@ function wallet(req, res, next) {
 }
 
 function topUp(req, res, next) {
-	console.log(req.body.bid);
-	pool.query(usesWallet_query, [req.user.nric, req.body.amount], (err, data) => {
-		console.log(err);
-		if (err) {
-			if (req.query.drivermode==='true')
-				res.redirect('/wallet?topUp=fail&drivermode=true')
-			else
-				res.redirect('/wallet?topUp=fail')
+	var getTransactionSummary_query = `select coalesce(sum(case when transaction >= 0 then transaction end),0) as topUp, ` +
+	`coalesce(sum(case when transaction < 0 then transaction end),0) as deducted, ` +
+	`to_char(date, 'YYYY-MM') as year_month from uses where $1 = uses.pid `;
+	if (req.query.search==='true') {
+		if (!req.body.date) {
+			getTransactionSummary_query = getTransactionSummary_query + ` group by year_month`;
 		}
 		else {
-			if (req.query.drivermode==='true')
-				res.redirect('/wallet?topUp=success&drivermode=true')
-			else
-				res.redirect('/wallet?topUp=success')
+			getTransactionSummary_query = getTransactionSummary_query + ` and to_char(date, 'YYYY-MM') = '` + req.body.date + `' group by year_month`;
 		}
-	});
+		pool.query(getWalletBalance_query, [req.user.nric], (err1, getWalletBalance) => {
+			pool.query(getTotalBids_query, [req.user.nric], (err1, getTotalBids) => {
+				pool.query(isDriver_query, [req.user.nric], (err3, driverCheck) => {
+					pool.query(getTransactionSummary_query, [req.user.nric], (err3, getTransactionSummary) => {
+						if (req.query.drivermode === 'true')
+							basic(req, res, 'wallet', { title: 'Wallet', driver: false, drivermode: true, getWalletBalance: getWalletBalance.rows, getTotalBids: getTotalBids.rows, getTransactionSummary: getTransactionSummary.rows });
+	
+						else if (driverCheck.rows[0].count == 0)
+							basic(req, res, 'wallet', { title: 'Wallet', driver: false, drivermode: false, getWalletBalance: getWalletBalance.rows, getTotalBids: getTotalBids.rows, getTransactionSummary: getTransactionSummary.rows });
+						else
+							basic(req, res, 'wallet', { title: 'Wallet', driver: true, drivermode: false, getWalletBalance: getWalletBalance.rows, getTotalBids: getTotalBids.rows, getTransactionSummary: getTransactionSummary.rows });
+					});
+				});
+			});
+		});
+	} else {
+		pool.query(usesWallet_query, [req.user.nric, req.body.amount], (err, data) => {
+			console.log(err);
+			if (err) {
+				if (req.query.drivermode==='true')
+					res.redirect('/wallet?topUp=fail&drivermode=true')
+				else
+					res.redirect('/wallet?topUp=fail')
+			}
+			else {
+				if (req.query.drivermode==='true')
+					res.redirect('/wallet?topUp=success&drivermode=true')
+				else
+					res.redirect('/wallet?topUp=success')
+			}
+		});
+	}
 }
 
 function basic(req, res, page, other) {

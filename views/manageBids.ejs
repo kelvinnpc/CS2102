@@ -30,6 +30,16 @@
 		<p>Enter bid = 0 to retract bid</p>
 		<p>Your bid = 0 if bid is rejected</p>
 		<p>Note: You cannot bid more than the available balance (after deducting existing 'pending' bids)</p>
+		<form method="post" action="manageBids?search=true">
+				<div class="form-group">
+					<label style="padding-top: 5px" for="source">Search source</label>
+					<input type="text" class="form-control" id="source" name="source" placeholder="Enter source here">
+					<label style="padding-top: 5px" for="destination">Search destination</label>
+					<input type="text" class="form-control" id="destination" name="destination" placeholder="Enter destination here">
+				</div>
+				<button type="submit" class="btn btn-primary">Search</button>
+		</form>
+		<br>
 		<table class="table">
 			<thead>
 				<tr>

@@ -46,38 +46,65 @@ function selectPassenger(req,res,next){
 
 function select(req, res, next) {
 	pool.connect(function (err, client, done) {
-		function abort(err) {
-			if (err) {
-				client.query('ROLLBACK', function (err) { done(); });
-				res.redirect('/selectPassenger?add=fail');
-				return true;
+		if (req.query.search==='true') {
+			var getPassengerBids_query = 'With tempTable as ' +
+					'(SELECT Rides.rid, Rides.did, source, destination, date, numSeats, coalesce(max(points),0) as maxpt ' +
+					'FROM Rides left join Bids on Rides.rid = Bids.rid group by Rides.rid) ' +
+					'Select Bids.pid, tempTable.rid, Users.name, source, destination, date, numSeats, Bids.points, maxpt, ' +
+					'ROUND((SELECT avg(ratings) FROM Rates R1 where R1.ratedID = Bids.pid),2) as ratings ' +
+					`FROM (tempTable join Bids on Bids.rid = tempTable.rid) join Users on Users.nric=Bids.pid ` +
+					`WHERE tempTable.did=$1 and Bids.status = 'pending' ` +
+					'and now()<date and lower(source) LIKE $2 and lower(destination) LIKE $3 and lower(Users.name) LIKE $4';
+			var source= "%" + req.body.source.toLowerCase() + "%";
+			var destination = "%" + req.body.destination.toLowerCase() + "%";
+			var name = "%" + req.body.name.toLowerCase() + "%";
+			if (!req.body.rid) {
+				client.query(getPassengerBids_query,[req.user.nric,source,destination,name], function(err, getPassengerBids) {
+					done();
+					basic(req,res,'selectPassenger', {title: 'Select passenger', getPassengerBids: getPassengerBids.rows});
+				});
 			}
+			else {
+				getPassengerBids_query = getPassengerBids_query + ' and tempTable.rid=$5'
+				client.query(getPassengerBids_query,[req.user.nric,source,destination,name,req.body.rid], function(err, getPassengerBids) {
+					done();
+					basic(req,res,'selectPassenger', {title: 'Select passenger', getPassengerBids: getPassengerBids.rows});
+				});
+			}
+		} else {
+			function abort(err) {
+				if (err) {
+					client.query('ROLLBACK', function (err) { done(); });
+					res.redirect('/selectPassenger?add=fail');
+					return true;
+				}
 
-			return false;
-		}
-		client.query('BEGIN', function (err, res1) {
-			if (abort(err)) { return; }
-			client.query(updateBidStatus_query, [req.body.val.split('; ')[7], req.body.val.split('; ')[0]], function (err, res2) {
+				return false;
+			}
+			client.query('BEGIN', function (err, res1) {
 				if (abort(err)) { return; }
-				client.query(updateNumSeats_query, [req.body.val.split('; ')[0]], function (err, res3) {
+				client.query(updateBidStatus_query, [req.body.val.split('; ')[7], req.body.val.split('; ')[0]], function (err, res2) {
 					if (abort(err)) { return; }
-					client.query(insertRatePassenger_query, [req.user.nric, req.body.val.split('; ')[7], req.body.val.split('; ')[0]], function (err, res7) {
+					client.query(updateNumSeats_query, [req.body.val.split('; ')[0]], function (err, res3) {
 						if (abort(err)) { return; }
-						client.query(insertRateDriver_query, [req.user.nric, req.body.val.split('; ')[7], req.body.val.split('; ')[0]], function (err, res8) {
+						client.query(insertRatePassenger_query, [req.user.nric, req.body.val.split('; ')[7], req.body.val.split('; ')[0]], function (err, res7) {
 							if (abort(err)) { return; }
-							client.query(insertRideHistory_query, [req.body.val.split('; ')[7], req.body.val.split('; ')[0], req.body.val.split('; ')[6]], function (err, res9) {
+							client.query(insertRateDriver_query, [req.user.nric, req.body.val.split('; ')[7], req.body.val.split('; ')[0]], function (err, res8) {
 								if (abort(err)) { return; }
-								client.query('COMMIT', function (err, res10) {
+								client.query(insertRideHistory_query, [req.body.val.split('; ')[7], req.body.val.split('; ')[0], req.body.val.split('; ')[6]], function (err, res9) {
 									if (abort(err)) { return; }
-									done();
-									res.redirect('/selectPassenger?add=success');
+									client.query('COMMIT', function (err, res10) {
+										if (abort(err)) { return; }
+										done();
+										res.redirect('/selectPassenger?add=success');
+									});
 								});
 							});
 						});
 					});
 				});
 			});
-		});
+		}
 	});
 }
 

@@ -22,6 +22,18 @@
 
 		<h1><%= title%></h1>
 		<br>
+		<form method="post" action="manageRide?searchTable1=true">
+				<div class="form-group">
+					<label style="padding-top: 5px" for="table1rid">Search ride ID</label>
+					<input type="number" class="form-control" id="table1rid" name="table1rid" placeholder="Enter ride ID here" min="1">
+					<label style="padding-top: 5px" for="table1source">Search source</label>
+					<input type="text" class="form-control" id="table1source" name="table1source" placeholder="Enter source here">
+					<label style="padding-top: 5px" for="table1destination">Search destination</label>
+					<input type="text" class="form-control" id="table1destination" name="table1destination" placeholder="Enter destination here">
+				</div>
+				<button type="submit" class="btn btn-primary">Search</button>
+		</form>
+		<br>
 		<h2>Rides with confirmed passengers</h2>
 		<table class="table">
 			<thead>
@@ -72,6 +84,18 @@
 				<% }) %>
 			</tbody>
 		</table>
+		<br>
+		<form method="post" action="manageRide?searchTable2=true">
+				<div class="form-group">
+					<label style="padding-top: 5px" for="table2rid">Search ride ID</label>
+					<input type="number" class="form-control" id="table2rid" name="table2rid" placeholder="Enter ride ID here" min="1">
+					<label style="padding-top: 5px" for="table2source">Search source</label>
+					<input type="text" class="form-control" id="table2source" name="table2source" placeholder="Enter source here">
+					<label style="padding-top: 5px" for="table2destination">Search destination</label>
+					<input type="text" class="form-control" id="table2destination" name="table2destination" placeholder="Enter destination here">
+				</div>
+				<button type="submit" class="btn btn-primary">Search</button>
+		</form>
 		<br>
 		<h2>Rides with no bids</h2>
 		<table class="table">

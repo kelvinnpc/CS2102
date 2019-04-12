@@ -58,6 +58,73 @@ function select(req,res,next) {
 				}
 			});
 		}
+		/* Searching through Rides with confirmed passenger (upper table) */
+		else if (req.query.searchTable1==='true') {
+			var getBiddedRides_query = 'Select Bids.pid, Rides.rid, Rides.status, Users.name, Users.phonenumber, source, destination, date, numSeats, Bids.points, ' +
+                'ROUND((SELECT avg(ratings) FROM Rates R1 where R1.ratedID = Bids.pid),2) as ratings, ' +
+                `(SELECT count(pid) FROM Bids where Bids.status = 'Ride Confirmed' and Bids.rid = Rides.rid group by Rides.rid) as count ` +
+								`FROM (Rides join Bids on Bids.rid = Rides.rid) join Users on Users.nric=Bids.pid ` +
+								`WHERE Rides.did=$1 and Bids.status = 'Ride Confirmed' and lower(source) LIKE $2 and lower(destination) LIKE $3`;
+			var getNotBiddedRides_query = 'Select * from Rides where Rides.rid not in (select rid from bids) and Rides.did=$1 order by Rides.status desc';
+			var source= "%" + req.body.table1source.toLowerCase() + "%";
+			var destination = "%" + req.body.table1destination.toLowerCase() + "%";
+			client.query(getNotBiddedRides_query,[req.user.nric], function(err,getNotBiddedRides) {
+				if (!req.body.table1rid) {
+					client.query(getBiddedRides_query,[req.user.nric,source,destination], function(err,getBiddedRides) {
+						var passengersArrays = [];
+						while (getBiddedRides.rows.length > 0) {
+							passengersArrays.push(getBiddedRides.rows.splice(0, getBiddedRides.rows[0].count));
+						}
+						done();
+						basic(req,res,'manageRide', {title: 'Manage rides', passenger: passengersArrays, getNotBiddedRides: getNotBiddedRides.rows});
+					});
+				}
+				else {
+					getBiddedRides_query = getBiddedRides_query + ' and Rides.rid=$4';
+					client.query(getBiddedRides_query,[req.user.nric,source,destination,req.body.table1rid], function(err,getBiddedRides) {
+						var passengersArrays = [];
+						while (getBiddedRides.rows.length > 0) {
+							passengersArrays.push(getBiddedRides.rows.splice(0, getBiddedRides.rows[0].count));
+						}
+						done();
+						basic(req,res,'manageRide', {title: 'Manage rides', passenger: passengersArrays, getNotBiddedRides: getNotBiddedRides.rows});
+					});
+
+				}
+			});
+		}
+		/* Searching through Rides with no passenger (bottom table) */
+		else if (req.query.searchTable2==='true') {
+			var getBiddedRides_query = 'Select Bids.pid, Rides.rid, Rides.status, Users.name, Users.phonenumber, source, destination, date, numSeats, Bids.points, ' +
+                'ROUND((SELECT avg(ratings) FROM Rates R1 where R1.ratedID = Bids.pid),2) as ratings, ' +
+                `(SELECT count(pid) FROM Bids where Bids.status = 'Ride Confirmed' and Bids.rid = Rides.rid group by Rides.rid) as count ` +
+								`FROM (Rides join Bids on Bids.rid = Rides.rid) join Users on Users.nric=Bids.pid ` +
+								`WHERE Rides.did=$1 and Bids.status = 'Ride Confirmed'`;
+			var getNotBiddedRides_query = 'Select * from Rides where Rides.rid not in (select rid from bids) and Rides.did=$1 ' +
+											`and lower(source) LIKE $2 and lower(destination) LIKE $3`;
+			var source= "%" + req.body.table2source.toLowerCase() + "%";
+			var destination = "%" + req.body.table2destination.toLowerCase() + "%";
+			client.query(getBiddedRides_query,[req.user.nric], function(err,getBiddedRides) {
+				var passengersArrays = [];
+				while (getBiddedRides.rows.length > 0) {
+					passengersArrays.push(getBiddedRides.rows.splice(0, getBiddedRides.rows[0].count));
+				}
+				if (!req.body.table2rid) {
+					client.query(getNotBiddedRides_query,[req.user.nric,source,destination], function(err,getNotBiddedRides) {
+						done();
+						basic(req,res,'manageRide', {title: 'Manage rides', passenger: passengersArrays, getNotBiddedRides: getNotBiddedRides.rows});
+					});
+				}
+				else {
+					getNotBiddedRides_query = getNotBiddedRides_query + ' and Rides.rid=$4';
+					client.query(getNotBiddedRides_query,[req.user.nric,source,destination,req.body.table2rid], function(err,getNotBiddedRides) {
+						done();
+						basic(req,res,'manageRide', {title: 'Manage rides', passenger: passengersArrays, getNotBiddedRides: getNotBiddedRides.rows});
+					});
+
+				}
+			});
+		}
 		else {
 			function abort(err) {
 				if (err) { client.query('ROLLBACK', function(err) { done(); });
