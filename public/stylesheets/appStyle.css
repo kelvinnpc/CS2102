@@ -50,30 +50,23 @@ border: none;
 border-radius: 5px;
 }
 
-
-.loginContainer {
-  display:flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  width: 50%;
-  height: 50%;
-  /* flex-grow: 1; incase logincontainer is contained in another */ 
-}
 .loginContainer button {
   display: flex;
   justify-content: center;
+
 }
-.registerContainer {
+.registerContainer, .loginContainer {
   display:flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
   height: 80%;
   width: 80%;
+  /* box-shadow: #333 2px 2px;
+  border-radius: 10px; */
   /* border: 1px solid red; */
 }
-.registerForm {
+.registerForm, .loginForm {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -89,7 +82,7 @@ border-radius: 5px;
 }
 
 .registerContainer .form-group {
-  width:50%;
+  width:45%;
   padding: 0px 10px;
 }
 
