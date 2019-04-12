@@ -86,17 +86,17 @@
 				</tr>
 			</thead>
 			<tbody>
-				<% for(var i=0; i<notBiddedRides.length; i++) { %>
+				<% for(var i=0; i<getNotBiddedRides.length; i++) { %>
 				<tr>
 					<form method="post" action="manageRide?noPassenger=true">
-						<td><%= notBiddedRides[i].rid%></td>
-						<td><%= notBiddedRides[i].source%></td>
-						<td><%= notBiddedRides[i].destination%></td>
-						<td><%= notBiddedRides[i].date%></td>
-						<td><%= notBiddedRides[i].numseats%></td>
+						<td><%= getNotBiddedRides[i].rid%></td>
+						<td><%= getNotBiddedRides[i].source%></td>
+						<td><%= getNotBiddedRides[i].destination%></td>
+						<td><%= getNotBiddedRides[i].date%></td>
+						<td><%= getNotBiddedRides[i].numseats%></td>
 						<td>
-							<% if (notBiddedRides[i].status==='open') { %>
-							<button type="submit" class="btn btn-primary" id="noPassenger" name="noPassenger" value="<%= notBiddedRides[i].rid %>">Close
+							<% if (getNotBiddedRides[i].status==='open') { %>
+							<button type="submit" class="btn btn-primary" id="noPassenger" name="noPassenger" value="<%= getNotBiddedRides[i].rid %>">Close
 								Ride</button>
 							<% } else { %>
 								Ride closed

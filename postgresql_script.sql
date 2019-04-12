@@ -10,10 +10,12 @@ DROP TABLE IF EXISTS Drivers;
 DROP TABLE IF EXISTS Passengers;
 DROP TABLE IF EXISTS Users;
 DROP TRIGGER IF EXISTS rideCheck on Rides;
-DROP TRIGGER IF EXISTS topUpCheck on Uses;
+DROP TRIGGER IF EXISTS transactionUpdate on Uses;
 DROP TRIGGER IF EXISTS updateRideCheck on Rides;
 DROP TRIGGER IF EXISTS insertBidCheck on Bids;
 DROP TRIGGER IF EXISTS newUserInit on Users;
+DROP TRIGGER IF EXISTS topUpCheck on Uses;
+DROP FUNCTION IF EXISTS topUpCheck;
 
 CREATE TABLE Users (
 	name    varchar(255) NOT NULL,
@@ -67,10 +69,9 @@ CREATE TABLE Uses (
 
 CREATE TABLE Cars (
 	did varchar(9) references Drivers (did),
-	platenumber varchar(10),
+	platenumber varchar(10) PRIMARY KEY,
 	model varchar(255),
-	numSeats int,
-	primary key(did, platenumber)
+	numSeats int
 );
 
 CREATE TABLE Bids (
@@ -113,7 +114,7 @@ FOR EACH ROW
 EXECUTE PROCEDURE rideCheck();
 
 
-CREATE OR REPLACE FUNCTION topUpCheck()
+CREATE OR REPLACE FUNCTION transactionUpdate()
 RETURNS trigger AS
 $$
 DECLARE currBalance integer;
@@ -126,11 +127,10 @@ END;
 $$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER topUpCheck
+CREATE TRIGGER transactionUpdate
 AFTER INSERT OR UPDATE ON Uses
 FOR EACH ROW
-when (NEW.transaction > 0)
-EXECUTE PROCEDURE topUpCheck();
+EXECUTE PROCEDURE transactionUpdate();
 
 CREATE OR REPLACE FUNCTION updateRideCheck()
 RETURNS trigger AS
@@ -221,12 +221,19 @@ INSERT INTO Users (name, username, password, nric, phonenumber, address) VALUES
 INSERT INTO Drivers (did) VALUES 
 ('S0000001A'),('S0000002B'),('S0000003C'),('S0000004D'),('S0000005E');
 
+
 /* Insert into Cars */
 INSERT INTO Cars (did,platenumber,model,numSeats) VALUES
 ('S0000001A','E13','model1',4),('S0000002B','B20','model1',4),('S0000003C','C11','model1',4),
 ('S0000004D','D31','model1',4),('S0000005E','E121','model1',4);
 
 /* Insert into Rides */
+INSERT INTO Rides (did, source, destination, numSeats, status, date) VALUES
+('S0000001A', 'Yishun', 'Yew Tee',4, 'close', '2019/01/02 16:00'),
+('S0000001A', 'Yew Tee', 'Yishun',4, 'close', '2019/03/02 12:00'),
+('S0000002B', 'Clementi', 'Tuas',4, 'close', '2019/02/02 16:00');
+
+
 INSERT INTO Rides (did, source, destination, numSeats,date) VALUES
 ('S0000001A', 'Kent Ridge', 'Buona',4,'2020/08/02 16:00'),
 ('S0000001A', 'Buona', 'Kent Ridge',2, '2020/07/12 12:00'),
@@ -239,37 +246,30 @@ INSERT INTO Rides (did, source, destination, numSeats,date) VALUES
 ('S0000005E', 'Somerset', 'Raffles Place',1,'2020/08/09 20:00'),
 ('S0000005E', 'Raffles Place', 'Somerset',2,'2020/06/19 22:00');
 
-INSERT INTO Rides (rid,did, source, destination, numSeats, status, date) VALUES
-(11,'S0000001A', 'Yishun', 'Yew Tee',4, 'close', '2019/01/02 16:00'),
-(12,'S0000001A', 'Yew Tee', 'Yishun',4, 'close', '2019/03/02 12:00');
-
 INSERT INTO Uses(pid,transaction) VALUES 
 ('S0000001A',1000), ('S0000002B',500), ('S0000003C',500), ('S0000004D',500), ('S0000005E',500),('S0000006F',100),
 ('S0000007G',500), ('S0000008H',500), ('S0000009I',500), ('S0000010J',500);
 
 
 INSERT INTO BIDS(pid,rid,points) VALUES
-('S0000007G',1,10), ('S0000008H',1,20), ('S0000009I',1,5),('S0000002B',2,1),('S0000003C',2,3),('S0000004D',2,10),
-('S0000005E',2,20),('S0000002B',2,1),('S0000007G',3,20),('S0000009I',3,12),('S0000010J',3,2),('S0000004D',4,3),
-('S0000004D',4,3),('S0000003C',4,11),('S0000010J',5,9),('S0000009I',5,18),('S0000002B',5,3),('S0000007G',5,10),
-('S0000010J',6,5),('S0000009I',6,3),('S0000008H',6,14),('S0000002B',7,16),('S0000009I',7,15),('S0000003C',8,8),
-('S0000005E',8,2),('S0000008H',8,9),('S0000002B',9,9),('S0000003C',10,4),('S0000002B',10,19),('S0000001A',10,20),
-('S0000001A',7,2),('S0000006F',3,20),('S0000006F',1,11);
+('S0000007G',4,10), ('S0000008H',4,20), ('S0000009I',4,5),('S0000002B',5,1),('S0000003C',5,3),('S0000004D',5,10),
+('S0000005E',5,20),('S0000002B',5,1),('S0000007G',6,20),('S0000009I',6,12),('S0000010J',6,2),('S0000004D',7,3),
+('S0000004D',7,3),('S0000003C',7,11),('S0000010J',8,9),('S0000009I',8,18),('S0000002B',8,3),('S0000007G',8,10),
+('S0000010J',9,5),('S0000009I',9,3),('S0000008H',9,14),('S0000002B',10,16),('S0000009I',10,15),('S0000003C',11,8),
+('S0000005E',11,2),('S0000008H',11,9),('S0000002B',12,9),('S0000003C',13,4),('S0000002B',13,19),('S0000001A',13,20),
+('S0000001A',10,2),('S0000006F',6,20),('S0000006F',4,11);
 
 
 INSERT INTO BIDS(pid,rid,points,status) VALUES
-('S0000006F',11,9,'Ride Confirmed'), ('S0000006F',12,1,'rejected');
+('S0000006F',1,9,'Ride Confirmed'), ('S0000006F',2,1,'rejected');
 
-UPDATE BIDS SET points=0 WHERE pid='S0000006F' and rid=12;
+UPDATE BIDS SET points=0 WHERE pid='S0000006F' and rid=2;
 
 INSERT INTO Rates(raterid,ratedid,ratings,rid) VALUES 
-('S0000006F','S0000001A',-1,11),('S0000001A','S0000006F',-1,11);
-
-INSERT INTO Rides (rid, did, source, destination, numSeats, status, date) VALUES
-(100,'S0000002B', 'Clementi', 'Tuas',4, 'close', '2019/02/02 16:00');
+('S0000006F','S0000001A',-1,1),('S0000001A','S0000006F',-1,1);
 
 INSERT INTO History(userID,rid,points) VALUES 
-('S0000006F',11,10),('S0000001A',100,1);
+('S0000006F',1,10),('S0000001A',3,1);
 
 INSERT INTO Uses(pid,transaction) VALUES
 ('S0000006F',-10),('S0000001A',10);
@@ -279,9 +279,3 @@ INSERT INTO Uses(pid,transaction,date) VALUES
 ('S0000001A',-10,'2019/03/07 12:00'),('S0000001A',-1,'2019/03/02 12:00'),('S0000001A',-2,'2019/03/02 16:00'),
 ('S0000001A',10,'2019/04/02 16:00'),('S0000001A',10,'2019/04/12 16:00'),('S0000001A',10,'2019/04/01 16:00'),
 ('S0000001A',-102,'2019/02/02 16:00'),('S0000001A',-12,'2019/02/12 16:00'),('S0000001A',-1,'2019/02/01 16:00');
-
-/* complicated query */
-select coalesce(sum(case when transaction >= 0 then transaction end),0) as topUp,
-						coalesce(sum(case when transaction < 0 then transaction end),0) as deducted, 
-						to_char(date, 'YYYY-MM') as year_month from uses where 's7654321z' = uses.pid group by year_month order by year_month;
-

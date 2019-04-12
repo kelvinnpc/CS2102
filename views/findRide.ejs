@@ -23,10 +23,12 @@
 		</div>
 
 		<div class="main">
-	  <div style = "background-color: PALEGOLDENROD">Available balance (before deducting existing bids): <%= data1[0].balance %> <br>
-		Available balance (after deducting existing bids): <%= data1[0].balance - data2[0].totalbid %>
+	  <div style = "background-color: PALEGOLDENROD">Available balance (before deducting existing bids): <%= getWalletBalance[0].balance %> <br>
+		Available balance (after deducting existing 'pending' bids): <%= getWalletBalance[0].balance - getTotalBids[0].totalbid %>
 		</div>
-    <h1><%= title%></h1>
+		<h1><%= title%></h1>
+		<p>Sorted by departing time</p>
+		<p>Note: You cannot bid more than the available balance (after deducting existing 'pending' bids)</p>
 		<table class="table">
 			<thead>
 				<tr>
@@ -42,27 +44,27 @@
 				</tr>
 			</thead>
 			<tbody>
-				<% for(var i=0; i<data.length; i++) { %>
+				<% for(var i=0; i<getRideInfo.length; i++) { %>
 				<tr>
 
 					<form method="post" action="findRide">
-					<td><%= data[i].rid%></td>
-					<td><%= data[i].name%></td>
+					<td><%= getRideInfo[i].rid%></td>
+					<td><%= getRideInfo[i].name%></td>
 					<td>
-							<% if (data[i].ratings == -1 || !data[i].ratings) { %>
+							<% if (getRideInfo[i].ratings == -1 || !getRideInfo[i].ratings) { %>
 								no rating 
 							<% } else { %>
-								<%= data[i].ratings%>
+								<%= getRideInfo[i].ratings%>
 							<% } %>
 					</td>
-					<td><%= data[i].source%></td>
-					<td><%= data[i].destination%></td>
-					<td><%= data[i].date%></td>
-					<td><%= data[i].numseats%></td>
-					<td><%= data[i].maxpt%></td>
+					<td><%= getRideInfo[i].source%></td>
+					<td><%= getRideInfo[i].destination%></td>
+					<td><%= getRideInfo[i].date%></td>
+					<td><%= getRideInfo[i].numseats%></td>
+					<td><%= getRideInfo[i].maxpt%></td>
 					<td>
 						<input type="number" class="form-control" id="bid" name="bid" placeholder="Enter your bid">
-						<button type="submit" class="btn btn-primary" name="rid" value="<%= data[i].rid%>">Bid</button>
+						<button type="submit" class="btn btn-primary" name="rid" value="<%= getRideInfo[i].rid%>">Bid</button>
 					</td>
 				</form>
 				</tr>

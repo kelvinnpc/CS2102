@@ -37,27 +37,27 @@
 				</tr>
 			</thead>
 			<tbody>
-				<% for(var i=0; i<data.length; i++) { %>
+				<% for(var i=0; i<getPassengerBids.length; i++) { %>
 				<tr>
 				<form method="post" action="selectPassenger">
-					<td><%= data[i].rid%></td>
-					<td><%= data[i].name%></td>
-					<td><% if (data[i].ratings == -1 || !data[i].ratings) { %>no rating 
+					<td><%= getPassengerBids[i].rid%></td>
+					<td><%= getPassengerBids[i].name%></td>
+					<td><% if (getPassengerBids[i].ratings == -1 || !getPassengerBids[i].ratings) { %>no rating 
                         <% } else { %>
-                            <%= data[i].ratings%>
+                            <%= getPassengerBids[i].ratings%>
                         <% } %>
                     </td>
-					<td><%= data[i].source%></td>
-					<td><%= data[i].destination%></td>
-					<td><%= data[i].date%></td>
-					<td><%= data[i].numseats%></td>
-					<td><%= data[i].points%></td>
-					<td><%= data[i].maxpt%></td>
+					<td><%= getPassengerBids[i].source%></td>
+					<td><%= getPassengerBids[i].destination%></td>
+					<td><%= getPassengerBids[i].date%></td>
+					<td><%= getPassengerBids[i].numseats%></td>
+					<td><%= getPassengerBids[i].points%></td>
+					<td><%= getPassengerBids[i].maxpt%></td>
 					
 					<td>
 						<button type="submit" class="btn btn-primary" id="val" name="val" 
 						value=
-						"<%= data[i].rid %>; <%= data[i].name %>; <%= data[i].source %>; <%= data[i].destination %>; <%= data[i].date %>; <%= data[i].numSeats %>; <%= data[i].points %>; <%=data[i].pid%>">
+						"<%= getPassengerBids[i].rid %>; <%= getPassengerBids[i].name %>; <%= getPassengerBids[i].source %>; <%= getPassengerBids[i].destination %>; <%= getPassengerBids[i].date %>; <%= getPassengerBids[i].numSeats %>; <%= getPassengerBids[i].points %>; <%=getPassengerBids[i].pid%>">
 						Select</button>
 					</td>
 				</form>
