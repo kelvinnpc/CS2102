@@ -32,15 +32,20 @@
 	</div>
 
 	<div class="main">
-		<div style="background-color: PALEGOLDENROD">Available balance (before deducting existing bids):
-			<%= getWalletBalance[0].balance %> <br>
-			Available balance (after deducting existing 'pending' bids):
+		<div class="balanceSummary">
+			<p>
+			Balance (before deducting existing bids):
+			<%= getWalletBalance[0].balance %> 
+			</p> 
+			<p>
+			Balance (after deducting existing 'pending' bids):
 			<%= getWalletBalance[0].balance - getTotalBids[0].totalbid %>
+			</p>
 		</div>
 		<h1><%= title%></h1>
 		<p>Sorted by departing time</p>
 		<p>Note: You cannot bid more than the available balance (after deducting existing 'pending' bids)</p>
-		<form method="post" action="findRide?search=true">
+		<form class="searchForm" method="post" action="findRide?search=true">
 			<div class="form-group">
 				<label style="padding-top: 5px" for="source">Search source</label>
 				<input type="text" class="form-control" id="source" name="source" placeholder="Enter source here">

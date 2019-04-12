@@ -23,9 +23,16 @@
 				</div>
 
 		<div class="main">
-	  <div style = "background-color: PALEGOLDENROD">Available balance (before deducting existing bids): <%= getWalletBalance[0].balance %> <br>
-		Available balance (after deducting existing 'pending' bids): <%= getWalletBalance[0].balance - getTotalBids[0].totalbid %>
-		</div>
+				<div class="balanceSummary">
+						<p>
+						Balance (before deducting existing bids):
+						<%= getWalletBalance[0].balance %> 
+						</p> 
+						<p>
+						Balance (after deducting existing 'pending' bids):
+						<%= getWalletBalance[0].balance - getTotalBids[0].totalbid %>
+						</p>
+					</div>
 		<h1><%= title%></h1>
 		<p>Enter bid = 0 to retract bid</p>
 		<p>Your bid = 0 if bid is rejected</p>
