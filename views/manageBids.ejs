@@ -76,7 +76,7 @@
           <td><%= getBidInfo[i].points%></td>
 					<% if (getBidInfo[i].status==='pending') { %>
 					<td>
-						<input type="number" class="form-control" id="bid" name="bid" placeholder="Enter your new bid">
+						<input type="number" class="form-control" id="bid" name="bid" placeholder="Enter Bid">
 						<button type="submit" class="btn btn-primary" name="rid" value="<%= getBidInfo[i].rid%>">Update Bid</button>
 					</td>
 					<% } else if (getBidInfo[i].status === 'rejected') { %>
